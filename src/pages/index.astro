@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PhotoGrid from '@/components/PhotoGrid.astro';
+import Hero from '@/components/Hero.astro';
+---
+
+<BaseLayout 
+  title="lodelnico.com - Photography & Visual Stories"
+  description="Personal photoblog featuring photography, visual stories and creative exploration by Nicolas."
+>
+  <Hero />
+  
+  <section class="featured-photos">
+    <div class="container">
+      <h2>Latest Photos</h2>
+      <PhotoGrid limit={12} />
+      
+      <div class="view-all">
+        <a href="/gallery" class="btn-primary">View All Photos</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .featured-photos {
+    margin: 4rem 0;
+  }
+  
+  .featured-photos h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+  
+  .view-all {
+    text-align: center;
+    margin-top: 3rem;
+  }
+  
+  .btn-primary {
+    display: inline-block;
+    background: var(--color-accent);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-primary:hover {
+    background: #0052a3;
+    transform: translateY(-2px);
+  }
+</style>

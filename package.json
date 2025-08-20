@@ -1,0 +1,31 @@
+{
+  "name": "lodelnico-photoblog",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Personal photoblog for lodelnico.com built with Astro",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "sync": "astro sync"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/sitemap": "^3.2.1",
+    "astro": "^4.16.9",
+    "sharp": "^0.33.5",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "astro",
+    "photoblog",
+    "photography",
+    "static-site"
+  ],
+  "author": "Nicolas <nicolas@lodelnico.com>",
+  "license": "MIT"
+}

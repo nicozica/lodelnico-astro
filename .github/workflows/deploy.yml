@@ -1,0 +1,104 @@
+name: Build and Deploy Photoblog
+
+on:
+  # Trigger on push to main branch
+  push:
+    branches: [ main ]
+  
+  # Allow manual trigger from GitHub Actions tab
+  workflow_dispatch:
+
+  # Trigger via webhook (for WordPress integration)
+  repository_dispatch:
+    types: [webhook]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      # Setup Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+      
+      # Run Astro check for TypeScript and validation
+      - name: Run Astro check
+        run: npm run check
+      
+      # Build the Astro site
+      - name: Build Astro site
+        run: npm run build
+        env:
+          NODE_ENV: production
+      
+      # Setup SSH key for deployment
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      # Add server to known hosts to avoid host key verification
+      - name: Add server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      
+      # Deploy to server using rsync
+      - name: Deploy to server
+        run: |
+          rsync -avz --delete \
+            --exclude='.htaccess' \
+            --exclude='error_log' \
+            --exclude='logs/' \
+            dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/lodelnico/
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+      
+      # Optional: Notify deployment status
+      - name: Deployment notification
+        if: success()
+        run: |
+          echo "✅ Successfully deployed lodelnico.com photoblog"
+          echo "🔗 Site URL: https://lodelnico.com"
+          echo "📦 Build size: $(du -sh dist | cut -f1)"
+      
+      # Handle deployment failure
+      - name: Deployment failed notification
+        if: failure()
+        run: |
+          echo "❌ Deployment failed for lodelnico.com"
+          echo "Please check the logs above for more details"
+
+  # Optional: Run lighthouse audit after deployment
+  lighthouse-audit:
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    if: success()
+    
+    steps:
+      - name: Wait for deployment
+        run: sleep 30
+      
+      - name: Run Lighthouse audit
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            https://lodelnico.com
+            https://lodelnico.com/gallery
+            https://lodelnico.com/about
+          uploadArtifacts: true
+          temporaryPublicStorage: true

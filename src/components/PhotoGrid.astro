@@ -1,0 +1,442 @@
+---
+export interface Props {
+  limit?: number;
+}
+
+const { limit } = Astro.props;
+
+// Mock photo data - in a real implementation, this would come from your CMS/API
+const photos = [
+  {
+    id: 1,
+    title: "Golden Hour Landscape",
+    src: "/images/gallery/photo-1.jpg",
+    alt: "Golden hour landscape with mountains",
+    category: "landscape",
+    date: "2024-12-15"
+  },
+  {
+    id: 2,
+    title: "Street Portrait",
+    src: "/images/gallery/photo-2.jpg", 
+    alt: "Black and white street portrait",
+    category: "portrait",
+    date: "2024-12-10"
+  },
+  {
+    id: 3,
+    title: "Urban Architecture",
+    src: "/images/gallery/photo-3.jpg",
+    alt: "Modern building architecture",
+    category: "architecture", 
+    date: "2024-12-08"
+  },
+  {
+    id: 4,
+    title: "Nature Close-up",
+    src: "/images/gallery/photo-4.jpg",
+    alt: "Close-up of water droplets on leaf",
+    category: "nature",
+    date: "2024-12-05"
+  },
+  {
+    id: 5,
+    title: "City Lights",
+    src: "/images/gallery/photo-5.jpg",
+    alt: "City lights at night",
+    category: "urban",
+    date: "2024-12-01"
+  },
+  {
+    id: 6,
+    title: "Minimalist Composition",
+    src: "/images/gallery/photo-6.jpg",
+    alt: "Minimalist black and white composition",
+    category: "abstract",
+    date: "2024-11-28"
+  },
+  {
+    id: 7,
+    title: "Forest Path",
+    src: "/images/gallery/photo-7.jpg",
+    alt: "Misty forest path in autumn",
+    category: "landscape",
+    date: "2024-11-25"
+  },
+  {
+    id: 8,
+    title: "Street Scene",
+    src: "/images/gallery/photo-8.jpg",
+    alt: "Busy street scene with motion blur",
+    category: "street",
+    date: "2024-11-20"
+  },
+  {
+    id: 9,
+    title: "Sunset Silhouette",
+    src: "/images/gallery/photo-9.jpg",
+    alt: "Silhouette against sunset",
+    category: "portrait",
+    date: "2024-11-18"
+  },
+  {
+    id: 10,
+    title: "Geometric Pattern",
+    src: "/images/gallery/photo-10.jpg",
+    alt: "Architectural geometric pattern",
+    category: "abstract",
+    date: "2024-11-15"
+  },
+  {
+    id: 11,
+    title: "Ocean Waves",
+    src: "/images/gallery/photo-11.jpg",
+    alt: "Ocean waves crashing on rocks",
+    category: "nature",
+    date: "2024-11-12"
+  },
+  {
+    id: 12,
+    title: "Market Vendor",
+    src: "/images/gallery/photo-12.jpg",
+    alt: "Local market vendor portrait",
+    category: "portrait",
+    date: "2024-11-10"
+  }
+];
+
+// Apply limit if specified
+const displayPhotos = limit ? photos.slice(0, limit) : photos;
+---
+
+<div class="photo-grid">
+  {displayPhotos.map((photo) => (
+    <article class="photo-item" data-category={photo.category}>
+      <div class="photo-wrapper">
+        <img 
+          src={photo.src}
+          alt={photo.alt}
+          title={photo.title}
+          loading="lazy"
+          width="400"
+          height="300"
+          class="photo-image"
+        />
+        <div class="photo-overlay">
+          <div class="photo-info">
+            <h3 class="photo-title">{photo.title}</h3>
+            <p class="photo-category">{photo.category}</p>
+            <time class="photo-date" datetime={photo.date}>
+              {new Date(photo.date).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+              })}
+            </time>
+          </div>
+          <button class="photo-expand" aria-label={`View ${photo.title} in full size`}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 3H21V9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 21H3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 3L14 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 21L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </article>
+  ))}
+</div>
+
+<style>
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  
+  .photo-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+  
+  .photo-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  }
+  
+  .photo-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    aspect-ratio: 4/3;
+  }
+  
+  .photo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .photo-item:hover .photo-image {
+    transform: scale(1.05);
+  }
+  
+  .photo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 1.5rem;
+  }
+  
+  .photo-item:hover .photo-overlay {
+    opacity: 1;
+  }
+  
+  .photo-info {
+    color: white;
+    flex: 1;
+  }
+  
+  .photo-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+  }
+  
+  .photo-category {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    text-transform: capitalize;
+    margin-bottom: 0.25rem;
+  }
+  
+  .photo-date {
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+  
+  .photo-expand {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+  }
+  
+  .photo-expand:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+  
+  .photo-expand svg {
+    display: block;
+  }
+  
+  @media (max-width: 768px) {
+    .photo-grid {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .photo-overlay {
+      padding: 1rem;
+    }
+    
+    .photo-title {
+      font-size: 1rem;
+    }
+    
+    .photo-category {
+      font-size: 0.8rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .photo-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .photo-wrapper {
+      aspect-ratio: 3/2;
+    }
+  }
+  
+  /* Category-based styling (optional) */
+  .photo-item[data-category="landscape"] {
+    border-left: 4px solid #4ade80;
+  }
+  
+  .photo-item[data-category="portrait"] {
+    border-left: 4px solid #f59e0b;
+  }
+  
+  .photo-item[data-category="street"] {
+    border-left: 4px solid #ef4444;
+  }
+  
+  .photo-item[data-category="nature"] {
+    border-left: 4px solid #10b981;
+  }
+  
+  .photo-item[data-category="architecture"] {
+    border-left: 4px solid #6366f1;
+  }
+  
+  .photo-item[data-category="abstract"] {
+    border-left: 4px solid #8b5cf6;
+  }
+  
+  .photo-item[data-category="urban"] {
+    border-left: 4px solid #06b6d4;
+  }
+</style>
+
+<script>
+  // Simple lightbox functionality - you might want to use a proper library
+  document.addEventListener('DOMContentLoaded', function() {
+    const expandButtons = document.querySelectorAll('.photo-expand');
+    
+    expandButtons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const photoItem = this.closest('.photo-item');
+        const img = photoItem.querySelector('.photo-image');
+        
+        // Create simple modal (you might want to use a proper lightbox library)
+        const modal = document.createElement('div');
+        modal.className = 'photo-modal';
+        modal.innerHTML = `
+          <div class="modal-backdrop">
+            <div class="modal-content">
+              <button class="modal-close" aria-label="Close">&times;</button>
+              <img src="${img.src}" alt="${img.alt}" class="modal-image">
+              <div class="modal-info">
+                <h3>${img.title}</h3>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+        
+        // Close modal functionality
+        const closeModal = () => {
+          document.body.removeChild(modal);
+          document.body.style.overflow = '';
+        };
+        
+        modal.querySelector('.modal-close').addEventListener('click', closeModal);
+        modal.querySelector('.modal-backdrop').addEventListener('click', function(e) {
+          if (e.target === this) closeModal();
+        });
+        
+        document.addEventListener('keydown', function escapeHandler(e) {
+          if (e.key === 'Escape') {
+            closeModal();
+            document.removeEventListener('keydown', escapeHandler);
+          }
+        });
+      });
+    });
+  });
+</script>
+
+<style is:global>
+  .photo-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(5px);
+  }
+  
+  .modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .modal-close {
+    position: absolute;
+    top: -3rem;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1001;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+  }
+  
+  .modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .modal-image {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 0.5rem;
+  }
+  
+  .modal-info {
+    margin-top: 1rem;
+    color: white;
+    text-align: center;
+  }
+  
+  .modal-info h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+</style>

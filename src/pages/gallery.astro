@@ -1,0 +1,60 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PhotoGrid from '@/components/PhotoGrid.astro';
+---
+
+<BaseLayout 
+  title="Gallery - lodelnico.com"
+  description="Browse my photography gallery featuring landscapes, portraits, street photography and more."
+>
+  <div class="gallery-header">
+    <div class="container">
+      <h1>Photo Gallery</h1>
+      <p>A collection of moments captured through my lens</p>
+    </div>
+  </div>
+  
+  <section class="gallery-content">
+    <div class="container">
+      <PhotoGrid />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .gallery-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+  }
+  
+  .gallery-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .gallery-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+  
+  .gallery-content {
+    margin: 4rem 0;
+  }
+  
+  @media (max-width: 768px) {
+    .gallery-header {
+      padding: 2rem 0;
+    }
+    
+    .gallery-header h1 {
+      font-size: 2rem;
+    }
+    
+    .gallery-header p {
+      font-size: 1rem;
+    }
+  }
+</style>
