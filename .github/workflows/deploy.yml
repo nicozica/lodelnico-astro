@@ -32,7 +32,7 @@ jobs:
       
       # Install dependencies
       - name: Install dependencies
-        run: npm ci
+        run: npm install
       
       # Run Astro check for TypeScript and validation
       - name: Run Astro check
@@ -63,7 +63,8 @@ jobs:
             --exclude='.htaccess' \
             --exclude='error_log' \
             --exclude='logs/' \
-            dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/lodelnico/
+            --exclude='wp/' \
+            dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/lodelnico-astro/dist/
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}

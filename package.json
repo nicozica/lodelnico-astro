@@ -1,5 +1,5 @@
 {
-  "name": "lodelnico-photoblog",
+  "name": "lodelnico-astro",
   "type": "module",
   "version": "1.0.0",
   "description": "Personal photoblog for lodelnico.com built with Astro",
