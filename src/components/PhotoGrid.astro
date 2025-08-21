@@ -322,10 +322,12 @@ const displayPhotos = limit ? photos.slice(0, limit) : photos;
     const expandButtons = document.querySelectorAll('.photo-expand');
     
     expandButtons.forEach(button => {
-      button.addEventListener('click', function(e) {
+      button.addEventListener('click', function(e: Event) {
         e.preventDefault();
-        const photoItem = this.closest('.photo-item');
-        const img = photoItem.querySelector('.photo-image');
+        const photoItem = (e.target as HTMLElement).closest('.photo-item') as HTMLElement;
+        const img = photoItem?.querySelector('.photo-image') as HTMLImageElement;
+        
+        if (!photoItem || !img) return;
         
         // Create simple modal (you might want to use a proper lightbox library)
         const modal = document.createElement('div');
@@ -351,12 +353,15 @@ const displayPhotos = limit ? photos.slice(0, limit) : photos;
           document.body.style.overflow = '';
         };
         
-        modal.querySelector('.modal-close').addEventListener('click', closeModal);
-        modal.querySelector('.modal-backdrop').addEventListener('click', function(e) {
-          if (e.target === this) closeModal();
+        const closeButton = modal.querySelector('.modal-close');
+        const backdrop = modal.querySelector('.modal-backdrop');
+        
+        closeButton?.addEventListener('click', closeModal);
+        backdrop?.addEventListener('click', function(e: Event) {
+          if (e.target === backdrop) closeModal();
         });
         
-        document.addEventListener('keydown', function escapeHandler(e) {
+        document.addEventListener('keydown', function escapeHandler(e: KeyboardEvent) {
           if (e.key === 'Escape') {
             closeModal();
             document.removeEventListener('keydown', escapeHandler);
