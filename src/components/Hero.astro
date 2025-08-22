@@ -1,185 +1,82 @@
 ---
-// Component for displaying hero section on homepage
+// Simple header component for homepage
 ---
 
-<section class="hero">
-  <div class="hero-background">
-    <img 
-      src="/images/hero-bg.jpg" 
-      alt="Photography hero background" 
-      loading="eager"
-      class="hero-image"
-    />
-    <div class="hero-overlay"></div>
-  </div>
-  
-  <div class="hero-content">
-    <div class="container">
-      <div class="hero-text">
-        <h1>Visual Stories</h1>
-        <p>
-          Capturing moments that matter through the lens of creativity and passion.
-          Welcome to my photographic journey.
-        </p>
-        <div class="hero-actions">
-          <a href="/gallery" class="btn-primary">Explore Gallery</a>
-          <a href="/about" class="btn-secondary">About Me</a>
-        </div>
+<header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <div class="header-text">
+        <h1>Estás en Lo del Nico.</h1>
+        <p>Bienvenido a mi nube.</p>
+      </div>
+      <div class="header-logos">
+        <!-- <img src="https://lodelnico.com/wp-content/uploads/2018/09/logo-blur-fm.png" alt="Blur FM" class="logo-blur">
+        <img src="https://lodelnico.com/wp-content/uploads/2018/09/nico-logo.png" alt="Nico" class="logo-nico"> -->
       </div>
     </div>
   </div>
-</section>
+</header>
 
 <style>
-  .hero {
-    position: relative;
-    height: 70vh;
-    min-height: 600px;
+  .site-header {
+    background: white;
+    padding: 2rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .header-text h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .header-text p {
+    font-size: 1.1rem;
+    color: #666;
+    margin: 0;
+  }
+  
+  .header-logos {
     display: flex;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    gap: 1.5rem;
   }
   
-  .hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-  }
-  
-  .hero-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-  
-  .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      135deg, 
-      rgba(0, 0, 0, 0.4) 0%, 
-      rgba(0, 0, 0, 0.6) 100%
-    );
-  }
-  
-  .hero-content {
-    position: relative;
-    z-index: 10;
-    text-align: center;
-    color: white;
-  }
-  
-  .hero-text h1 {
-    font-size: 4rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    line-height: 1.1;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  }
-  
-  .hero-text p {
-    font-size: 1.3rem;
-    margin-bottom: 2.5rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.6;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  }
-  
-  .hero-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  
-  .btn-primary,
-  .btn-secondary {
-    display: inline-block;
-    padding: 1rem 2.5rem;
-    border-radius: 0.5rem;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-  }
-  
-  .btn-primary {
-    background: var(--color-accent);
-    color: white;
-    border-color: var(--color-accent);
-  }
-  
-  .btn-primary:hover {
-    background: #0052a3;
-    border-color: #0052a3;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 102, 204, 0.4);
-  }
-  
-  .btn-secondary {
-    background: transparent;
-    color: white;
-    border-color: white;
-  }
-  
-  .btn-secondary:hover {
-    background: white;
-    color: var(--color-text);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+  .logo-blur,
+  .logo-nico {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
   }
   
   @media (max-width: 768px) {
-    .hero {
-      height: 60vh;
-      min-height: 500px;
-    }
-    
-    .hero-text h1 {
-      font-size: 2.5rem;
-    }
-    
-    .hero-text p {
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-    }
-    
-    .hero-actions {
+    .header-content {
       flex-direction: column;
-      align-items: center;
-    }
-    
-    .btn-primary,
-    .btn-secondary {
-      width: 100%;
-      max-width: 250px;
       text-align: center;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .hero {
-      height: 50vh;
-      min-height: 400px;
+      gap: 1.5rem;
     }
     
-    .hero-text h1 {
+    .header-text h1 {
       font-size: 2rem;
     }
     
-    .hero-text p {
+    .header-text p {
       font-size: 1rem;
+    }
+    
+    .logo-blur,
+    .logo-nico {
+      height: 45px;
     }
   }
 </style>

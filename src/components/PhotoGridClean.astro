@@ -1,0 +1,22 @@
+---
+import { getPhotos } from '../utils/wordpress-api';
+
+const { limit = 9 } = Astro.props;
+const photos = await getPhotos(limit);
+---
+
+<div class="photo-grid">
+  {photos.map((photo, index) => (
+    <div class="photo-item">
+      <img 
+        src={photo.src} 
+        alt={photo.alt}
+        loading="lazy"
+      />
+    </div>
+  ))}
+</div>
+
+<style>
+  @import '../styles/components/photo-grid.css';
+</style>

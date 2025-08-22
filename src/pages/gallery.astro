@@ -1,60 +1,54 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import PhotoGrid from '@/components/PhotoGrid.astro';
+import Hero from '@/components/HeroClean.astro';
+import { getPaginatedPhotos } from '../utils/wordpress-api-paginated';
+
+// Get page number from URL params
+const url = new URL(Astro.request.url);
+const currentPage = parseInt(url.searchParams.get('page') || '1');
+
+// Fetch paginated photos
+const paginatedData = await getPaginatedPhotos(currentPage, 9);
+const { photos, totalPages, hasNextPage, hasPrevPage } = paginatedData;
 ---
 
 <BaseLayout 
-  title="Gallery - lodelnico.com"
-  description="Browse my photography gallery featuring landscapes, portraits, street photography and more."
+  title={`Galería - Página ${currentPage} - Lo del Nico`}
+  description="Galería de fotografía personal de Nicolas desde Buenos Aires, Argentina."
 >
-  <div class="gallery-header">
-    <div class="container">
-      <h1>Photo Gallery</h1>
-      <p>A collection of moments captured through my lens</p>
-    </div>
-  </div>
+  <Hero />
   
-  <section class="gallery-content">
-    <div class="container">
-      <PhotoGrid />
+  <main class="photos-section">
+    <!-- Photo Grid -->
+    <div class="photo-grid">
+      {photos.map((photo, index) => (
+        <div class="photo-item">
+          <img 
+            src={photo.src} 
+            alt={photo.alt}
+            loading="lazy"
+          />
+        </div>
+      ))}
     </div>
-  </section>
+    
+    <!-- Pagination -->
+    <div class="pagination">
+      <span class="page-info">{currentPage.toString().padStart(2, '0')} / {totalPages.toString().padStart(2, '0')}</span>
+      <div class="page-controls">
+        {hasPrevPage && (
+          <a href={`/gallery?page=${currentPage - 1}`} class="page-btn" aria-label="Página anterior">←</a>
+        )}
+        {hasNextPage && (
+          <a href={`/gallery?page=${currentPage + 1}`} class="page-btn" aria-label="Página siguiente">→</a>
+        )}
+      </div>
+    </div>
+  </main>
 </BaseLayout>
 
 <style>
-  .gallery-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 4rem 0;
-    text-align: center;
-  }
-  
-  .gallery-header h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-  
-  .gallery-header p {
-    font-size: 1.2rem;
-    opacity: 0.9;
-  }
-  
-  .gallery-content {
-    margin: 4rem 0;
-  }
-  
-  @media (max-width: 768px) {
-    .gallery-header {
-      padding: 2rem 0;
-    }
-    
-    .gallery-header h1 {
-      font-size: 2rem;
-    }
-    
-    .gallery-header p {
-      font-size: 1rem;
-    }
-  }
+  @import '../styles/layout/sections.css';
+  @import '../styles/components/photo-grid.css';
+  @import '../styles/components/pagination.css';
 </style>

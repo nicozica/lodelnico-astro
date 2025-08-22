@@ -1,177 +1,112 @@
-# lodelnico.com – Personal Photoblog
+# Lo del Nico - Galería de Fotografía
 
-This is the source code for my personal photoblog [lodelnico.com](https://lodelnico.com), built with **Astro** and deployed to my self-hosted Apache server on Debian.
+Un sitio web estático construido con Astro que funciona como galería de fotografía headless usando la API REST de WordPress de lodelnico.com.
 
-## 🚀 Tech Stack
+## 🚀 Características
 
-- **[Astro](https://astro.build/)** – Static site generator with excellent performance
-- **TypeScript** – Type safety and better development experience  
-- **GitHub Actions** – CI/CD pipeline for automated deployment
-- **Apache on Debian** – Self-hosted web server at `/var/www/lodelnico`
-- **rsync/SSH** – Secure deployment method
+- **Galería headless**: Consume imágenes directamente desde la API de WordPress
+- **Diseño responsivo**: Grid adaptable de 3x3 en desktop, 2x2 en tablet, 1x1 en móvil
+- **Carga optimizada**: Las imágenes se cargan de forma lazy y en tamaños apropiados
+- **Build estático**: Generación estática para máxima performance
+- **Multiidioma**: Soporte para español (AR)
 
-## 📸 Features
+## 🛠️ Tecnologías
 
-- **Responsive photo gallery** with lazy loading and lightbox functionality
-- **Image optimization** with multiple sizes and WebP support
-- **SEO optimized** with proper meta tags, sitemap, and structured data
-- **Performance focused** with minimal JavaScript and optimal loading
-- **Mobile-first design** that works great on all devices
-- **Category filtering** for organizing different types of photography
+- [Astro](https://astro.build/) - Framework para sitios estáticos
+- [WordPress REST API](https://developer.wordpress.org/rest-api/) - Fuente de contenido
+- TypeScript - Type safety
+- CSS moderno - Grid layouts y responsive design
 
-## 🛠️ Development
-
-### Prerequisites
-
-- Node.js 18+ 
-- npm or yarn
-
-### Setup
+## 📦 Instalación
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/lodelnico.git
-cd lodelnico
-
-# Install dependencies
+# Instalar dependencias
 npm install
 
-# Start development server
+# Modo desarrollo
 npm run dev
+
+# Build para producción
+npm run build
+
+# Preview del build
+npm run preview
 ```
 
-The site will be available at `http://localhost:3000`
+## � Configuración
 
-### Available Scripts
-
-- `npm run dev` – Start development server
-- `npm run build` – Build for production
-- `npm run preview` – Preview production build locally
-- `npm run check` – Run Astro and TypeScript checks
-
-## 🚀 Deployment
-
-### Automatic Deployment
-
-The site automatically deploys when you push to the `main` branch using GitHub Actions.
-
-### Required GitHub Secrets
-
-Set up these secrets in your GitHub repository settings:
-
-```bash
-SSH_PRIVATE_KEY  # Your private SSH key for server access
-SSH_HOST         # Your server hostname/IP (e.g., your-server.com)
-SSH_USER         # SSH username (e.g., www-data or your-user)
-```
-
-### Manual Deployment
-
-You can also trigger deployment manually:
-
-1. Go to the "Actions" tab in your GitHub repository
-2. Select "Build and Deploy Photoblog" 
-3. Click "Run workflow"
-
-### Server Requirements
-
-- Apache web server
-- SSH access with key-based authentication
-- Directory `/var/www/lodelnico` with proper permissions
-
-## 📁 Project Structure
-
-```
-/
-├── public/              # Static assets
-│   ├── images/         # Photo gallery images
-│   ├── favicon.svg     # Site favicon
-│   └── robots.txt      # SEO robots file
-├── src/
-│   ├── components/     # Reusable Astro components
-│   │   ├── Hero.astro
-│   │   └── PhotoGrid.astro
-│   ├── layouts/        # Page layouts
-│   │   └── BaseLayout.astro
-│   ├── pages/          # Site pages (file-based routing)
-│   │   ├── index.astro
-│   │   ├── gallery.astro
-│   │   └── about.astro
-│   ├── styles/         # Global CSS styles
-│   │   └── global.css
-│   └── utils/          # Utility functions
-│       └── photo-utils.ts
-├── .github/
-│   └── workflows/
-│       └── deploy.yml  # GitHub Actions deployment
-├── astro.config.mjs    # Astro configuration
-├── package.json        # Dependencies and scripts
-└── tsconfig.json       # TypeScript configuration
-```
-
-## 📷 Adding Photos
-
-1. **Add images** to `/public/images/gallery/` 
-2. **Update the photo data** in `/src/components/PhotoGrid.astro`
-3. **Commit and push** – the site will auto-deploy
-
-### Image Guidelines
-
-- **Format**: JPG or WebP recommended
-- **Size**: Max 1MB per image for web performance
-- **Dimensions**: 1200x800px or similar aspect ratio for consistency
-- **Naming**: Use descriptive filenames (e.g., `sunset-beach-2024.jpg`)
-
-## 🎨 Customization
-
-### Colors and Styling
-
-Edit CSS custom properties in `/src/styles/global.css`:
-
-```css
-:root {
-  --color-background: #fafafa;
-  --color-text: #1a1a1a;
-  --color-accent: #0066cc;
-  /* ... more variables */
-}
-```
-
-### Photo Categories
-
-Add new categories in `/src/utils/photo-utils.ts`:
+La API de WordPress está configurada en `src/utils/wordpress-api.ts`:
 
 ```typescript
-const colors: { [key: string]: string } = {
-  landscape: '#4ade80',
-  portrait: '#f59e0b',
-  yournewcategory: '#your-color',
-  // ...
-};
+const WORDPRESS_API_BASE = 'https://lodelnico.com/wp-json/wp/v2';
 ```
 
-## 🔧 Troubleshooting
+### Endpoints utilizados
 
-### Deployment Issues
+- `/media` - Obtiene las imágenes con metadata
+- Parámetros: `per_page`, `orderby=date`, `order=desc`
 
-- **SSH connection fails**: Check your SSH key and server credentials
-- **Permission denied**: Ensure `/var/www/lodelnico` has correct permissions
-- **Build fails**: Run `npm run check` locally to identify TypeScript issues
+## 📁 Estructura del proyecto
 
-### Development Issues
+```
+src/
+├── components/
+│   ├── Hero.astro          # Header simple con logos
+│   └── PhotoGrid.astro     # Grid de fotos 3x3
+├── layouts/
+│   └── BaseLayout.astro    # Layout base
+├── pages/
+│   ├── index.astro         # Página principal
+│   └── gallery.astro       # Galería completa
+├── utils/
+│   ├── photo-utils.ts      # Utilidades para fotos
+│   └── wordpress-api.ts    # Cliente API de WordPress
+└── styles/
+    └── global.css          # Estilos globales
+```
 
-- **Port 3000 in use**: Change port in `astro.config.mjs`
-- **Images not loading**: Ensure images are in `/public/images/`
-- **TypeScript errors**: Check imports and type definitions
+## 🎨 Diseño
 
-## 📝 License
+El sitio replica el diseño simple mostrado en el mockup:
 
-This project is for personal use. Feel free to get inspired by the code structure, but please don't copy content or images.
+- Header con título "Estás en Lo del Nico" y logos de Blur FM
+- Grid de 3x3 fotos cuadradas con bordes redondeados
+- Paginación simple con controles de navegación
+- Colores neutros y tipografía limpia
 
-## 🤝 Contributing
+## 🚀 Despliegue
 
-This is a personal project, but suggestions and improvements are welcome! Feel free to open an issue or pull request.
+El sitio se puede desplegar en cualquier servicio de hosting estático:
+
+```bash
+npm run build
+# Los archivos generados están en dist/
+```
+
+### Opciones recomendadas:
+- Netlify
+- Vercel  
+- GitHub Pages
+- Cloudflare Pages
+
+## � Responsive
+
+- **Desktop (>768px)**: Grid 3x3
+- **Tablet (480-768px)**: Grid 2x2  
+- **Móvil (<480px)**: Grid 1x1
+
+## 🔄 Futuros desarrollos
+
+- [ ] Lightbox para ver imágenes en tamaño completo
+- [ ] Filtros por categoría
+- [ ] Búsqueda de imágenes
+- [ ] Lazy loading mejorado con IntersectionObserver
+- [ ] Previsualización de metadatos en hover
+
+## 📄 Licencia
+
+MIT
 
 ---
 
-Built with ❤️ using [Astro](https://astro.build/)
+Desarrollado por Nicolas para [lodelnico.com](https://lodelnico.com)
