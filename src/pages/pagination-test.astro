@@ -1,0 +1,82 @@
+---
+import { getMediaPaginatedPhotos } from '../utils/wordpress-media-api';
+
+let page1Data = {};
+let page2Data = {};
+let error = null;
+
+try {
+  console.log('Testing pagination...');
+  
+  const page1Result = await getMediaPaginatedPhotos(1, 9);
+  const page2Result = await getMediaPaginatedPhotos(2, 9);
+  
+  page1Data = {
+    page: 1,
+    photosCount: page1Result.photos.length,
+    firstPhotoId: page1Result.photos[0]?.id,
+    lastPhotoId: page1Result.photos[page1Result.photos.length - 1]?.id,
+    photoIds: page1Result.photos.map(p => p.id)
+  };
+  
+  page2Data = {
+    page: 2,
+    photosCount: page2Result.photos.length,
+    firstPhotoId: page2Result.photos[0]?.id,
+    lastPhotoId: page2Result.photos[page2Result.photos.length - 1]?.id,
+    photoIds: page2Result.photos.map(p => p.id)
+  };
+  
+} catch (err: any) {
+  error = err.message;
+}
+---
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pagination Test</title>
+  <style>
+    body { font-family: monospace; margin: 40px; }
+    .error { color: red; }
+    .success { color: green; }
+    .warning { color: orange; }
+    pre { background: #f5f5f5; padding: 20px; overflow-x: auto; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Test de Paginación</h1>
+  
+  {error && (
+    <div class="error">
+      <h2>❌ Error:</h2>
+      <p>{error}</p>
+    </div>
+  )}
+  
+  <div class="comparison">
+    <div>
+      <h2>Página 1</h2>
+      <pre>{JSON.stringify(page1Data, null, 2)}</pre>
+    </div>
+    
+    <div>
+      <h2>Página 2</h2>
+      <pre>{JSON.stringify(page2Data, null, 2)}</pre>
+    </div>
+  </div>
+  
+  {!error && page1Data && page2Data && (
+    <div>
+      {JSON.stringify((page1Data as any).photoIds) === JSON.stringify((page2Data as any).photoIds) ? (
+        <div class="error">❌ PROBLEMA: Las dos páginas muestran las mismas fotos</div>
+      ) : (
+        <div class="success">✅ Las páginas muestran fotos diferentes</div>
+      )}
+    </div>
+  )}
+  
+  <p><a href="/">← Volver</a></p>
+</body>
+</html>

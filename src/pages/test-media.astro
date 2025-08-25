@@ -1,16 +1,16 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import PhotoGrid from '@/components/PhotoGridClean.astro';
-import Hero from '@/components/HeroClean.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PhotoGrid from '../components/PhotoGridClean.astro';
+import Hero from '../components/HeroClean.astro';
 import { getMediaPaginatedPhotos } from '../utils/wordpress-media-api';
 
-// Get initial data from WordPress Media API (real images)
+// Get initial data from WordPress Media API
 const paginatedData = await getMediaPaginatedPhotos(1, 9);
 const { totalPages, photos } = paginatedData;
 ---
 
 <BaseLayout 
-  title="Lo del Nico - Fotografía"
+  title="Lo del Nico - Fotografía (Media API)"
   description="Galería de fotografía personal de Nicolas desde Buenos Aires, Argentina."
 >
   <Hero />
@@ -22,7 +22,7 @@ const { totalPages, photos } = paginatedData;
       <span class="page-info">01 / {totalPages.toString().padStart(2, '0')}</span>
       <div class="page-controls">
         {totalPages > 1 && (
-          <a href="/gallery?page=2" class="page-btn" aria-label="Página siguiente">→</a>
+          <a href="/test-media-gallery?page=2" class="page-btn" aria-label="Página siguiente">→</a>
         )}
       </div>
     </div>

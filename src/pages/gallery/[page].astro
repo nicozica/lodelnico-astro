@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/HeroClean.astro';
+import { getMediaPaginatedPhotos } from '../../utils/wordpress-media-api';
+
+// Generate static paths for all pages
+export async function getStaticPaths() {
+  // Get total pages to generate all routes
+  const firstPageData = await getMediaPaginatedPhotos(1, 9);
+  const totalPages = firstPageData.totalPages;
+  
+  const paths = [];
+  for (let i = 1; i <= totalPages; i++) {
+    paths.push({
+      params: { page: i.toString() }
+    });
+  }
+  
+  return paths;
+}
+
+// Get page number from URL params
+const { page } = Astro.params;
+const currentPage = parseInt(page || '1');
+
+// Fetch real images from WordPress Media API
+const paginatedData = await getMediaPaginatedPhotos(currentPage, 9);
+const { photos, totalPages, hasNextPage, hasPrevPage } = paginatedData;
+---
+
+<BaseLayout 
+  title={`Galería - Página ${currentPage} - Lo del Nico`}
+  description="Galería de fotografía personal de Nicolas desde Buenos Aires, Argentina."
+>
+  <Hero />
+  
+  <main class="photos-section">
+    <!-- Photo Grid -->
+    <div class="photo-grid">
+      {photos.map((photo, index) => (
+        <div class="photo-item">
+          <img 
+            src={photo.src} 
+            alt={photo.alt}
+            loading="lazy"
+          />
+        </div>
+      ))}
+    </div>
+    
+    <!-- Pagination -->
+    <div class="pagination">
+      <span class="page-info">{currentPage.toString().padStart(2, '0')} / {totalPages.toString().padStart(2, '0')}</span>
+      <div class="page-controls">
+        {hasPrevPage && (
+          <a href={`/gallery/${currentPage - 1}`} class="page-btn" aria-label="Página anterior">←</a>
+        )}
+        {hasNextPage && (
+          <a href={`/gallery/${currentPage + 1}`} class="page-btn" aria-label="Página siguiente">→</a>
+        )}
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  @import '../../styles/layout/sections.css';
+  @import '../../styles/components/photo-grid.css';
+  @import '../../styles/components/pagination.css';
+</style>

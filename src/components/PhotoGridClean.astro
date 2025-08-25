@@ -1,8 +1,15 @@
 ---
-import { getPhotos } from '../utils/wordpress-api';
+interface Photo {
+  id: string | number;
+  title: string;
+  src: string;
+  alt: string;
+  date: string;
+  postId: number;
+  postTitle: string;
+}
 
-const { limit = 9 } = Astro.props;
-const photos = await getPhotos(limit);
+const { photos = [] }: { photos?: Photo[] } = Astro.props;
 ---
 
 <div class="photo-grid">
