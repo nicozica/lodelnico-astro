@@ -1,12 +1,15 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import PhotoGrid from '@/components/PhotoGridClean.astro';
 import Hero from '@/components/HeroClean.astro';
-import { getMediaPaginatedPhotos } from '../utils/wordpress-media-api';
+import type { PhotoItem } from '@/types/photoblog';
 
-// Get initial data from WordPress Media API (real images)
-const paginatedData = await getMediaPaginatedPhotos(1, 9);
-const { totalPages, photos } = paginatedData;
+// Import the photoblog data to show count
+import photoblogData from '../data/photoblog.json';
+const photos = photoblogData as PhotoItem[];
+const totalPhotos = photos.length;
+
+// Get the latest few photos for preview
+const latestPhotos = photos.slice(0, 6);
 ---
 
 <BaseLayout 
@@ -15,21 +18,169 @@ const { totalPages, photos } = paginatedData;
 >
   <Hero />
   
-  <main class="photos-section">
-    <PhotoGrid photos={photos} />
-    
-    <div class="pagination">
-      <span class="page-info">01 / {totalPages.toString().padStart(2, '0')}</span>
-      <div class="page-controls">
-        {totalPages > 1 && (
-          <a href="/gallery?page=2" class="page-btn" aria-label="Página siguiente">→</a>
-        )}
+  <main class="home-content">
+    <!-- Gallery Overview -->
+    <section class="gallery-intro">
+      <h2>Galería de Fotos</h2>
+      <p>
+        Archivo personal de fotografías desde Buenos Aires, Argentina. 
+        <strong>{totalPhotos}</strong> imágenes disponibles.
+      </p>
+      <a href="/gallery/1" class="gallery-link">
+        Ver galería completa →
+      </a>
+    </section>
+
+    <!-- Latest Photos Preview -->
+    <section class="latest-photos">
+      <h3>Últimas fotografías</h3>
+      <div class="preview-grid">
+        {latestPhotos.map((photo: PhotoItem) => (
+          <div class="preview-item">
+            <a href={photo.url} target="_blank" rel="noopener">
+              <img 
+                src={photo.image} 
+                alt={photo.title}
+                loading="lazy"
+                class="preview-img"
+              />
+              <div class="preview-caption">
+                <span class="preview-title">{photo.title}</span>
+              </div>
+            </a>
+          </div>
+        ))}
       </div>
-    </div>
+    </section>
   </main>
 </BaseLayout>
 
 <style>
   @import '../styles/layout/sections.css';
-  @import '../styles/components/pagination.css';
+
+  .home-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  .gallery-intro {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .gallery-intro h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .gallery-intro p {
+    font-size: 1.25rem;
+    color: #64748b;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .gallery-link {
+    display: inline-block;
+    background: #3b82f6;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .gallery-link:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+  }
+
+  .latest-photos {
+    margin-top: 4rem;
+  }
+
+  .latest-photos h3 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .preview-item {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .preview-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+  }
+
+  .preview-item a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .preview-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .preview-caption {
+    padding: 1rem;
+  }
+
+  .preview-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .home-content {
+      padding: 2rem 1rem;
+    }
+
+    .gallery-intro h2 {
+      font-size: 2rem;
+    }
+
+    .gallery-intro p {
+      font-size: 1.1rem;
+    }
+
+    .preview-grid {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .preview-img {
+      height: 180px;
+    }
+  }
 </style>

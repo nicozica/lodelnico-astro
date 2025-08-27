@@ -13,7 +13,7 @@ const { photos = [] }: { photos?: Photo[] } = Astro.props;
 ---
 
 <div class="photo-grid">
-  {photos.map((photo, index) => (
+  {photos.map((photo, _index) => (
     <div class="photo-item">
       <img 
         src={photo.src} 

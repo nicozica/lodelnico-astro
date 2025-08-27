@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "node scripts/fetch-photoblog.mjs",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
-    "sync": "astro sync"
+    "sync": "astro sync",
+    "fetch-data": "node scripts/fetch-photoblog.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

@@ -108,7 +108,7 @@ export async function getPostsWithImages(page: number = 1, postsPerPage: number 
     const posts: WordPressPost[] = await response.json();
     
     // Get total count from headers
-    const totalPosts = parseInt(response.headers.get('X-WP-Total') || '0');
+    const _totalPosts = parseInt(response.headers.get('X-WP-Total') || '0');
     const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '0');
     
     let allPhotos: Photo[] = [];

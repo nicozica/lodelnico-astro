@@ -1,0 +1,172 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/HeroClean.astro';
+import type { PhotoItem } from '../types/photoblog';
+
+// Generate static paths for all pages (9 items per page)
+export async function getStaticPaths() {
+  // Import the photoblog data generated at build time (inside function for build process)
+  const photoblogData = await import('../data/photoblog.json');
+  const photos = photoblogData.default as PhotoItem[];
+  
+  const photosPerPage = 9;
+  const totalPages = Math.ceil(photos.length / photosPerPage);
+  
+  const paths = [];
+  for (let i = 1; i <= totalPages; i++) {
+    const startIndex = (i - 1) * photosPerPage;
+    const endIndex = startIndex + photosPerPage;
+    const pagePhotos = photos.slice(startIndex, endIndex);
+    
+    paths.push({
+      params: { page: i.toString() },
+      props: {
+        photos: pagePhotos,
+        currentPage: i,
+        totalPages,
+        hasNextPage: i < totalPages,
+        hasPrevPage: i > 1
+      }
+    });
+  }
+  
+  return paths;
+}
+
+// Get props from getStaticPaths
+const { photos: pagePhotos, currentPage, totalPages, hasNextPage, hasPrevPage } = Astro.props;
+---
+
+<BaseLayout 
+  title={`Galería - Página ${currentPage} - Lo del Nico`}
+  description="Galería de fotografía personal de Nicolas desde Buenos Aires, Argentina."
+>
+  <Hero />
+  
+  <main class="photos-section">
+    <!-- Photo Grid (3x3 layout) -->
+    <div class="photo-grid">
+      {pagePhotos.map((photo: PhotoItem) => (
+        <div class="photo-item">
+          <a href={photo.url} target="_blank" rel="noopener" class="photo-link">
+            <img 
+              src={photo.image} 
+              alt={photo.title}
+              loading="lazy"
+              class="photo-img"
+            />
+            <div class="photo-caption">
+              <h3 class="photo-title">{photo.title}</h3>
+              <time class="photo-date">
+                {new Date(photo.date).toLocaleDateString('es-ES', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </time>
+            </div>
+          </a>
+        </div>
+      ))}
+    </div>
+    
+    <!-- Pagination -->
+    <div class="pagination">
+      <span class="page-info">
+        {currentPage.toString().padStart(2, '0')} / {totalPages.toString().padStart(2, '0')}
+      </span>
+      <div class="page-controls">
+        {hasPrevPage && (
+          <a href={`/${currentPage - 1}`} class="page-btn" aria-label="Página anterior">←</a>
+        )}
+        {hasNextPage && (
+          <a href={`/${currentPage + 1}`} class="page-btn" aria-label="Página siguiente">→</a>
+        )}
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  @import '../styles/layout/sections.css';
+  @import '../styles/components/pagination.css';
+
+  /* Photo Grid - Simple 3x3 layout */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
+  }
+
+  .photo-item {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .photo-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+  }
+
+  .photo-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .photo-img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-caption {
+    padding: 1rem;
+  }
+
+  .photo-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .photo-date {
+    font-size: 0.875rem;
+    color: #64748b;
+    display: block;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .photo-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding: 0 1rem;
+    }
+
+    .photo-img {
+      height: 200px;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .photo-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

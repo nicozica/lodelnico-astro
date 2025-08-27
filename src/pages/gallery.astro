@@ -1,4 +1,11 @@
 ---
-// Redirect to new gallery structure
-return Astro.redirect('/gallery/1');
+// Redirect /gallery to the root gallery at /1
 ---
+
+<script>
+window.location.href = '/1';
+</script>
+
+<meta http-equiv="refresh" content="0;url=/1">
+
+<p>Redirecting to gallery...</p>

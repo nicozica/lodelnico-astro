@@ -1,0 +1,114 @@
+name: Rebuild Photoblog
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual rebuild'
+        required: false
+        default: 'Manual trigger'
+  
+  # WordPress webhook trigger
+  repository_dispatch:
+    types: [wp_photoblog_updated]
+  
+  # Schedule - rebuild daily at 6 AM UTC
+  schedule:
+    - cron: '0 6 * * *'
+
+jobs:
+  rebuild-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch photoblog data from WordPress
+        run: npm run fetch-data
+        env:
+          NODE_ENV: production
+
+      - name: Commit updated photoblog data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Add the updated JSON file
+          git add src/data/photoblog.json
+          
+          # Check if there are changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to photoblog data"
+          else
+            git commit -m "Update photoblog data from WordPress API"
+            git push
+          fi
+
+      - name: Run Astro check
+        run: npx astro check
+
+      - name: Build Astro site
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      # Deploy steps - customize based on your hosting provider
+      - name: Setup SSH agent
+        if: ${{ env.SSH_PRIVATE_KEY != '' }}
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts  
+        if: ${{ env.SSH_PRIVATE_KEY != '' }}
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.SSH_PORT || '22' }}" -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to server via SSH
+        if: ${{ env.SSH_PRIVATE_KEY != '' }}
+        run: |
+          rsync -az --delete \
+            --exclude='.htaccess' \
+            --exclude='error_log' \
+            --exclude='logs/' \
+            -e "ssh -p ${{ secrets.SSH_PORT || '22' }}" \
+            dist/ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/lodelnico-astro/"
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Alternative: Deploy to GitHub Pages
+      # Uncomment if you want to use GitHub Pages instead of SSH
+      # - name: Deploy to GitHub Pages
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./dist
+
+      - name: Notify completion
+        run: |
+          echo "✅ Photoblog rebuild and deploy completed!"
+          echo "Trigger: ${{ github.event_name }}"
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "WordPress webhook type: ${{ github.event.action }}"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual reason: ${{ github.event.inputs.reason }}"
+          fi
