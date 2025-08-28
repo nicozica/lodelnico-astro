@@ -1,10 +1,24 @@
 /* Gallery styles: 3x3 photo grid and pagination */
 
-/* Gallery container */
+/* Gallery container - use unified container system */
 .gallery-container {
-  max-width: var(--gallery-max-width);
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--section-spacing);
+  padding: 0 24px;
+}
+
+/* Large screens (≥1440px) */
+@media (min-width: 1440px) {
+  .gallery-container {
+    max-width: 1320px;
+  }
+}
+
+/* Extra large screens (≥1680px) */
+@media (min-width: 1680px) {
+  .gallery-container {
+    max-width: 1440px;
+  }
 }
 
 /* Photo grid - 3x3 layout with 4:3 aspect ratio images */
@@ -87,5 +101,55 @@
   .pagination {
     flex-direction: column;
     gap: 1rem;
+  }
+}
+
+/* Swiss-style minimal pagination */
+.gallery-pager {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 18px 0;
+  font-family: var(--font-figtree);
+}
+
+.gallery-pager .count {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-heading);
+}
+
+.gallery-pager .nav {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+/* Reuse shared arrow class from photo.css for exact same size */
+.gallery-pager .arrow {
+  text-decoration: none;
+}
+
+.gallery-pager .arrow.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Responsive typography for pagination */
+@media (max-width: 767px) {
+  .gallery-pager .count {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .gallery-pager .count {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .gallery-pager .count {
+    font-size: 24px;
   }
 }

@@ -2,6 +2,7 @@
 // Photo detail page with title, date, image and content
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import type { PhotoItem } from '../../types/photoblog';
+import he from 'he';
 
 interface Props {
   photo: PhotoItem;
@@ -60,51 +61,42 @@ const calculatedFromPage = Math.ceil((photoIndex + 1) / 9); // 9 photos per page
 
 // Format publication date
 const formattedDate = formatDateInSpanish(photo.date);
+const decodedTitle = he.decode(photo.title);
 ---
 
 <BaseLayout 
-  title={`${photo.title} - Lo del Nico`}
-  description={`Photo: ${photo.title}`}
+  title={`${decodedTitle} - Lo del Nico`}
+  description={`Photo: ${decodedTitle}`}
   showHero={false}
 >
   <div class="photo-detail">
     <div class="content-container">
-      <!-- Header with title and date -->
-      <header class="photo-header">
-        <h1 class="photo-title">{photo.title}</h1>
-        <p class="photo-date">{formattedDate}</p>
-        
-        <!-- Back to Gallery Link -->
-        <nav class="back-nav">
-          <a 
-            href={`/${calculatedFromPage}/`} 
-            class="back-link"
-            id="back-link"
-          >
-            ← Back to gallery
-          </a>
-        </nav>
-      </header>
+      <!-- Header with title and date (date just below title) -->
+      <div class="content">
+        <header class="photo-header">
+          <h1 class="photo-title">{decodedTitle}</h1>
+          <div class="photo-date">{formattedDate}</div>
+        </header>
+      </div>
 
-      <!-- Image container with navigation arrows -->
+      <!-- Image section with wider container and navigation arrows -->
       <div class="image-section">
         <!-- Previous photo arrow -->
         {prevPhoto && (
           <a 
             href={`/photo/${prevPhoto.id}/`} 
-            class="nav-arrow nav-prev"
+            class="nav-arrow arrow nav-prev"
             aria-label={`Previous photo: ${prevPhoto.title}`}
           >
             ←
           </a>
         )}
 
-        <!-- Main image -->
-        <div class="image-container">
+        <!-- Main image with wider container -->
+        <div class="image-wide">
           <img 
             src={photo.image} 
-            alt={photo.title}
-            class="photo-image"
+            alt={decodedTitle}
             width="1200"
             height="800"
           />
@@ -114,7 +106,7 @@ const formattedDate = formatDateInSpanish(photo.date);
         {nextPhoto && (
           <a 
             href={`/photo/${nextPhoto.id}/`} 
-            class="nav-arrow nav-next"
+            class="nav-arrow arrow nav-next"
             aria-label={`Next photo: ${nextPhoto.title}`}
           >
             →
@@ -122,9 +114,19 @@ const formattedDate = formatDateInSpanish(photo.date);
         )}
       </div>
 
-      <!-- Content section -->
+      <!-- Back to gallery link - centered just below the image -->
+      <div class="photo-back">
+        <a 
+          href={`/${calculatedFromPage}/`} 
+          id="back-link"
+        >
+          ← Back to gallery
+        </a>
+      </div>
+
+      <!-- Content section with narrow text container -->
       {photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim() && (
-        <section class="photo-content">
+        <section class="content photo-content" style="margin-top: 40px;">
           <div class="prose" set:html={photo.contentHtmlNoImg} />
         </section>
       )}

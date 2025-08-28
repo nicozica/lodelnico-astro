@@ -1,10 +1,29 @@
 /* Layout styles: hero section, containers, and page structure */
 
+/* Unified container system with responsive breakpoints */
+.container {
+  max-width: 1200px; /* Default for laptops */
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Large screens (≥1440px) */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1320px;
+  }
+}
+
+/* Extra large screens (≥1680px) */
+@media (min-width: 1680px) {
+  .container {
+    max-width: 1440px;
+  }
+}
+
 /* Hero section - appears on homepage and gallery pages */
 .hero {
-  text-align: center;
-  padding: var(--hero-spacing) var(--section-spacing);
-  margin-bottom: var(--hero-spacing);
+  padding: var(--hero-spacing) 0;
 }
 
 .hero-title {
@@ -13,6 +32,7 @@
   color: var(--text-heading);
   margin-bottom: 1rem;
   line-height: 1.1;
+  text-align: left; /* Left align to match gallery container */
 }
 
 .hero-subtitle {
@@ -21,19 +41,34 @@
   color: var(--text-primary);
   margin-bottom: 0;
   line-height: 1.3;
+  text-align: left; /* Left align to match gallery container */
 }
 
-/* Main content containers */
+/* Main content containers - updated to use unified container system */
 .main-container {
-  max-width: var(--gallery-max-width);
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--section-spacing);
+  padding: 0 24px;
+}
+
+/* Large screens (≥1440px) */
+@media (min-width: 1440px) {
+  .main-container {
+    max-width: 1320px;
+  }
+}
+
+/* Extra large screens (≥1680px) */
+@media (min-width: 1680px) {
+  .main-container {
+    max-width: 1440px;
+  }
 }
 
 .content-container {
   max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: 0 var(--section-spacing);
+  padding: 0 24px;
 }
 
 /* Page structure */
@@ -50,10 +85,11 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .hero {
-    padding: var(--hero-spacing) 1rem;
+    padding: var(--hero-spacing) 0;
     margin-bottom: 2rem;
   }
 
+  .container,
   .main-container,
   .content-container {
     padding: 0 1rem;

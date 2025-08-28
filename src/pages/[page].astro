@@ -2,6 +2,7 @@
 // Gallery pagination: 3x3 grid with 4:3 aspect ratio images, clean design
 import BaseLayout from '../layouts/BaseLayout.astro';
 import type { PhotoItem } from '../types/photoblog';
+import he from 'he';
 
 interface Props {
   photos: PhotoItem[];
@@ -54,11 +55,11 @@ const { photos: pagePhotos, currentPage, totalPages, hasNextPage, hasPrevPage } 
         <a 
           href={`/photo/${photo.id}/?from=${currentPage}`} 
           class="photo-link"
-          aria-label={photo.title}
+          aria-label={he.decode(photo.title)}
         >
           <img 
             src={photo.image} 
-            alt={photo.title}
+            alt={he.decode(photo.title)}
             loading="lazy"
             class="photo-img"
             width="400"
@@ -68,18 +69,20 @@ const { photos: pagePhotos, currentPage, totalPages, hasNextPage, hasPrevPage } 
       ))}
     </div>
     
-    <!-- Simple Pagination -->
-    <nav class="pagination" aria-label="Gallery pagination">
-      <span class="page-info">
-        Page {currentPage} of {totalPages}
-      </span>
-      <div class="page-controls">
-        {hasPrevPage && (
-          <a href={`/${currentPage - 1}/`} class="page-btn" aria-label="Previous page">← Prev</a>
-        )}
-        {hasNextPage && (
-          <a href={`/${currentPage + 1}/`} class="page-btn" aria-label="Next page">Next →</a>
-        )}
+    <!-- Swiss-style minimal pagination -->
+    <nav class="gallery-pager" aria-label="Gallery pagination">
+      <span class="count">{String(currentPage).padStart(2,"0")} / {String(totalPages).padStart(2,"0")}</span>
+      <div class="nav">
+        <a 
+          class={`arrow ${currentPage <= 1 ? "disabled" : ""}`} 
+          href={`/${currentPage - 1}/`} 
+          aria-label="Previous"
+        >←</a>
+        <a 
+          class={`arrow ${currentPage >= totalPages ? "disabled" : ""}`} 
+          href={`/${currentPage + 1}/`} 
+          aria-label="Next"
+        >→</a>
       </div>
     </nav>
   </div>
