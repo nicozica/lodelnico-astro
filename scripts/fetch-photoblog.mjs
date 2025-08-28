@@ -182,6 +182,85 @@ function stripHTML(html) {
 }
 
 /**
+ * Remove only the first <img> tag from HTML content
+ */
+function removeFirstImageTag(html = '') {
+  if (!html) return '';
+  // Remove only the first <img ...> occurrence (case insensitive)
+  return html.replace(/<img[^>]*>/i, '');
+}
+
+/**
+ * Basic HTML sanitization for security
+ */
+function sanitizeBasic(html = '') {
+  if (!html) return '';
+  
+  return html
+    // Remove dangerous tags
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
+    .replace(/<object[\s\S]*?<\/object>/gi, '')
+    .replace(/<embed[\s\S]*?<\/embed>/gi, '')
+    .replace(/<form[\s\S]*?<\/form>/gi, '')
+    
+    // Remove dangerous attributes
+    .replace(/\son\w+="[^"]*"/gi, '') // onclick, onload, etc.
+    .replace(/\son\w+='[^']*'/gi, '')
+    .replace(/\sjavascript:/gi, '')
+    .replace(/\sdata:/gi, '')
+    .replace(/\svbscript:/gi, '')
+    
+    // Clean up common WordPress artifacts
+    .replace(/\[caption[^\]]*\]/g, '')
+    .replace(/\[\/caption\]/g, '')
+    .replace(/\[gallery[^\]]*\]/g, '')
+    .replace(/\[\/gallery\]/g, '')
+    
+    .trim();
+}
+
+/**
+ * Clean and sanitize HTML content for security
+ */
+function sanitizeHTML(html) {
+  if (!html) return '';
+  
+  return html
+    // Remove dangerous tags
+    .replace(/<script[^>]*>.*?<\/script>/gis, '')
+    .replace(/<style[^>]*>.*?<\/style>/gis, '')
+    .replace(/<iframe[^>]*>.*?<\/iframe>/gis, '')
+    .replace(/<object[^>]*>.*?<\/object>/gis, '')
+    .replace(/<embed[^>]*>.*?<\/embed>/gis, '')
+    .replace(/<form[^>]*>.*?<\/form>/gis, '')
+    
+    // Remove dangerous attributes
+    .replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, '') // onclick, onload, etc.
+    .replace(/\s*javascript\s*:/gi, '')
+    .replace(/\s*data\s*:/gi, '')
+    .replace(/\s*vbscript\s*:/gi, '')
+    
+    // Clean up common WordPress artifacts
+    .replace(/\[caption[^\]]*\]/g, '')
+    .replace(/\[\/caption\]/g, '')
+    .replace(/\[gallery[^\]]*\]/g, '')
+    .replace(/\[\/gallery\]/g, '')
+    
+    // Ensure images have proper attributes for responsive behavior
+    .replace(/<img([^>]*?)>/gi, (match, attrs) => {
+      // Keep existing src, alt, title but remove width/height
+      const cleanAttrs = attrs
+        .replace(/\s*width\s*=\s*["'][^"']*["']/gi, '')
+        .replace(/\s*height\s*=\s*["'][^"']*["']/gi, '');
+      return `<img${cleanAttrs} style="max-width:100%;height:auto;">`;
+    })
+    
+    .trim();
+}
+
+/**
  * Fetch all posts with images from WordPress
  */
 async function fetchAllPostsWithImages() {
@@ -239,6 +318,15 @@ async function fetchAllPostsWithImages() {
           
           const postDate = new Date(post.date);
           
+          // Process content if available
+          const contentRendered = post.content?.rendered || '';
+          const contentText = contentRendered ? stripHTML(contentRendered) : '';
+          
+          // Sanitize and clean content
+          const safeHtml = sanitizeBasic(contentRendered);
+          const contentHtml = sanitizeHTML(contentRendered);
+          const contentHtmlNoImg = removeFirstImageTag(safeHtml);
+          
           const photoItem = {
             id: post.id,
             title: stripHTML(post.title?.rendered) || 'Untitled',
@@ -246,6 +334,9 @@ async function fetchAllPostsWithImages() {
             year: postDate.getFullYear(),
             url: post.link,
             image: imageUrl,
+            contentHtml,
+            contentText,
+            contentHtmlNoImg,
           };
           
           allPosts.push(photoItem);

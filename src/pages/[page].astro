@@ -1,172 +1,172 @@
 ---
+// Gallery pagination: 3x3 grid with 4:3 aspect ratio images, clean design
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/HeroClean.astro';
 import type { PhotoItem } from '../types/photoblog';
+
+interface Props {
+  photos: PhotoItem[];
+  currentPage: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
 
 // Generate static paths for all pages (9 items per page)
 export async function getStaticPaths() {
-  // Import the photoblog data generated at build time (inside function for build process)
+  // Import the photoblog data generated at build time
   const photoblogData = await import('../data/photoblog.json');
   const photos = photoblogData.default as PhotoItem[];
   
   const photosPerPage = 9;
   const totalPages = Math.ceil(photos.length / photosPerPage);
   
-  const paths = [];
-  for (let i = 1; i <= totalPages; i++) {
-    const startIndex = (i - 1) * photosPerPage;
+  return Array.from({ length: totalPages }, (_, i) => {
+    const page = i + 1;
+    const startIndex = i * photosPerPage;
     const endIndex = startIndex + photosPerPage;
     const pagePhotos = photos.slice(startIndex, endIndex);
     
-    paths.push({
-      params: { page: i.toString() },
+    return {
+      params: { page: page.toString() },
       props: {
         photos: pagePhotos,
-        currentPage: i,
+        currentPage: page,
         totalPages,
-        hasNextPage: i < totalPages,
-        hasPrevPage: i > 1
-      }
-    });
-  }
-  
-  return paths;
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1
+      } satisfies Props
+    };
+  });
 }
 
 // Get props from getStaticPaths
-const { photos: pagePhotos, currentPage, totalPages, hasNextPage, hasPrevPage } = Astro.props;
+const { photos: pagePhotos, currentPage, totalPages, hasNextPage, hasPrevPage } = Astro.props as Props;
 ---
 
 <BaseLayout 
-  title={`Galería - Página ${currentPage} - Lo del Nico`}
-  description="Galería de fotografía personal de Nicolas desde Buenos Aires, Argentina."
+  title={`Gallery - Page ${currentPage} - Lo del Nico`}
+  description="Personal photography gallery by Nicolas from Buenos Aires, Argentina."
 >
-  <Hero />
-  
-  <main class="photos-section">
-    <!-- Photo Grid (3x3 layout) -->
+  <main class="gallery-container">
+    <!-- Photo Grid - Only Images (3x3 layout with 4:3 aspect ratio) -->
     <div class="photo-grid">
       {pagePhotos.map((photo: PhotoItem) => (
-        <div class="photo-item">
-          <a href={photo.url} target="_blank" rel="noopener" class="photo-link">
-            <img 
-              src={photo.image} 
-              alt={photo.title}
-              loading="lazy"
-              class="photo-img"
-            />
-            <div class="photo-caption">
-              <h3 class="photo-title">{photo.title}</h3>
-              <time class="photo-date">
-                {new Date(photo.date).toLocaleDateString('es-ES', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
-              </time>
-            </div>
-          </a>
-        </div>
+        <a 
+          href={`/photo/${photo.id}?from=${currentPage}`} 
+          class="photo-link"
+          aria-label={photo.title}
+        >
+          <img 
+            src={photo.image} 
+            alt={photo.title}
+            loading="lazy"
+            class="photo-img"
+            width="400"
+            height="400"
+          />
+        </a>
       ))}
     </div>
     
-    <!-- Pagination -->
-    <div class="pagination">
+    <!-- Simple Pagination -->
+    <nav class="pagination" aria-label="Gallery pagination">
       <span class="page-info">
-        {currentPage.toString().padStart(2, '0')} / {totalPages.toString().padStart(2, '0')}
+        Page {currentPage} of {totalPages}
       </span>
       <div class="page-controls">
         {hasPrevPage && (
-          <a href={`/${currentPage - 1}`} class="page-btn" aria-label="Página anterior">←</a>
+          <a href={`/${currentPage - 1}`} class="page-btn" aria-label="Previous page">← Prev</a>
         )}
         {hasNextPage && (
-          <a href={`/${currentPage + 1}`} class="page-btn" aria-label="Página siguiente">→</a>
+          <a href={`/${currentPage + 1}`} class="page-btn" aria-label="Next page">Next →</a>
         )}
       </div>
-    </div>
+    </nav>
   </main>
 </BaseLayout>
 
 <style>
-  @import '../styles/layout/sections.css';
-  @import '../styles/components/pagination.css';
+  .gallery-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
 
-  /* Photo Grid - Simple 3x3 layout */
+  /* Photo Grid - Simple 3x3 grid with 4:3 aspect ratio images */
   .photo-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    gap: 1.5rem;
     margin-bottom: 3rem;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 2rem;
-  }
-
-  .photo-item {
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .photo-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
   }
 
   .photo-link {
     display: block;
-    text-decoration: none;
-    color: inherit;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
   }
 
   .photo-img {
     width: 100%;
-    height: 250px;
+    height: 100%;
     object-fit: cover;
     display: block;
   }
 
-  .photo-caption {
-    padding: 1rem;
+  /* Pagination */
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-top: 1px solid #e5e7eb;
   }
 
-  .photo-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .page-info {
+    font-size: 0.9rem;
+    color: #6b7280;
   }
 
-  .photo-date {
-    font-size: 0.875rem;
-    color: #64748b;
-    display: block;
+  .page-controls {
+    display: flex;
+    gap: 0.5rem;
   }
 
-  /* Responsive design */
+  .page-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #f3f4f6;
+    color: #374151;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+  }
+
+  .page-btn:hover {
+    background: #e5e7eb;
+  }
+
+  /* Responsive Design */
   @media (max-width: 768px) {
-    .photo-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      padding: 0 1rem;
+    .gallery-container {
+      padding: 1rem;
     }
 
-    .photo-img {
-      height: 200px;
-    }
-  }
-
-  @media (min-width: 769px) and (max-width: 1024px) {
     .photo-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .photo-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .pagination {
+      flex-direction: column;
+      gap: 1rem;
     }
   }
 </style>

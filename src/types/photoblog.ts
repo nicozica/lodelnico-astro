@@ -7,6 +7,9 @@ export interface PhotoItem {
   year: number;
   image: string;
   url: string;
+  contentHtml?: string;
+  contentText?: string;
+  contentHtmlNoImg?: string;
   location?: string;
   tags?: string[];
 }
