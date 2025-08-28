@@ -26,7 +26,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 }
 
 .photo-link {
@@ -114,7 +114,7 @@
 }
 
 .gallery-pager .count {
-  font-weight: 500;
+  font-weight: 600; /* More hierarchical weight */
   letter-spacing: 0.02em;
   color: var(--text-heading);
 }
@@ -125,9 +125,20 @@
   align-items: center;
 }
 
-/* Reuse shared arrow class from photo.css for exact same size */
+/* Pagination arrows styling */
 .gallery-pager .arrow {
   text-decoration: none;
+  color: var(--text-heading);
+  opacity: 0.9;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-pager .arrow:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 .gallery-pager .arrow.disabled {
@@ -135,21 +146,118 @@
   pointer-events: none;
 }
 
+.arrow-icon {
+  display: block;
+  width: 32px; /* Larger SVG icons */
+  height: 32px;
+}
+}
+
 /* Responsive typography for pagination */
 @media (max-width: 767px) {
   .gallery-pager .count {
-    font-size: 16px;
+    font-size: 24px; /* Much larger for better visibility */
+    font-weight: 600;
+  }
+  
+  .arrow-icon {
+    width: 24px; /* Smaller arrows for mobile */
+    height: 24px;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
   .gallery-pager .count {
-    font-size: 18px;
+    font-size: 28px; /* Larger for tablet */
+  }
+  
+  .arrow-icon {
+    width: 28px;
+    height: 28px;
   }
 }
 
 @media (min-width: 1200px) {
   .gallery-pager .count {
-    font-size: 24px;
+    font-size: 36px; /* Much larger for desktop hierarchy */
+  }
+  
+  .arrow-icon {
+    width: 36px; /* Larger SVG icons for desktop */
+    height: 36px;
+  }
+}
+
+/* Gallery footer - Swiss minimal style */
+.gallery-footer {
+  margin-top: 32px;
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+}
+
+.footer-about {
+  font: 400 24px/1.6 "Figtree", system-ui, sans-serif;
+  color: #2A2E3B;
+}
+
+.footer-logos {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.footer-logos img {
+  height: 72px; /* Larger logos in desktop */
+  width: auto;
+  display: block;
+}
+
+.footer-rule {
+  margin: 24px 0 16px;
+  border: 0;
+  border-top: 1px solid #D8D8D8;
+}
+
+.footer-powered {
+  text-align: center;
+  font: 500 16px/1.4 "Figtree", system-ui, sans-serif;
+  color: #1f1f1f;
+  padding-bottom: 40px; /* Extra bottom spacing */
+}
+
+@media (max-width: 800px) {
+  .footer-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .footer-logos {
+    justify-content: center;
+    gap: 32px;
+  }
+  
+  .footer-logos img {
+    height: 44px; /* Smaller logos in mobile */
+  }
+  
+  .footer-about {
+    text-align: center;
+    font-size: 18px; /* Still readable in mobile */
+  }
+  
+  .gallery-pager .count {
+    font-size: 18px; /* Maintain hierarchy in mobile */
+  }
+  
+  .footer-powered {
+    font-size: 14px;
+    margin-top: 12px;
+    padding-bottom: 28px; /* Less bottom spacing in mobile */
   }
 }

@@ -62,6 +62,9 @@ const calculatedFromPage = Math.ceil((photoIndex + 1) / 9); // 9 photos per page
 // Format publication date
 const formattedDate = formatDateInSpanish(photo.date);
 const decodedTitle = he.decode(photo.title);
+
+// Check if photo has additional text content for conditional styling
+const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().length);
 ---
 
 <BaseLayout 
@@ -69,7 +72,7 @@ const decodedTitle = he.decode(photo.title);
   description={`Photo: ${decodedTitle}`}
   showHero={false}
 >
-  <div class="photo-detail">
+  <main class={`photo-page ${hasText ? 'has-text' : 'no-text'}`}>
     <div class="content-container">
       <!-- Header with title and date (date just below title) -->
       <div class="content">
@@ -80,18 +83,7 @@ const decodedTitle = he.decode(photo.title);
       </div>
 
       <!-- Image section with wider container and navigation arrows -->
-      <div class="image-section">
-        <!-- Previous photo arrow -->
-        {prevPhoto && (
-          <a 
-            href={`/photo/${prevPhoto.id}/`} 
-            class="nav-arrow arrow nav-prev"
-            aria-label={`Previous photo: ${prevPhoto.title}`}
-          >
-            ←
-          </a>
-        )}
-
+      <div class="image-wrapper">
         <!-- Main image with wider container -->
         <div class="image-wide">
           <img 
@@ -102,16 +94,28 @@ const decodedTitle = he.decode(photo.title);
           />
         </div>
 
-        <!-- Next photo arrow -->
-        {nextPhoto && (
-          <a 
-            href={`/photo/${nextPhoto.id}/`} 
-            class="nav-arrow arrow nav-next"
-            aria-label={`Next photo: ${nextPhoto.title}`}
-          >
-            →
-          </a>
-        )}
+        <!-- Navigation arrows using SVG files -->
+        <div class="photo-nav">
+          {prevPhoto && (
+            <a 
+              class="nav-btn prev"
+              href={`/photo/${prevPhoto.id}/`} 
+              aria-label={`Previous photo: ${prevPhoto.title}`}
+            >
+              <img class="nav-icon" src="/arrow-left.svg" alt="Previous" />
+            </a>
+          )}
+          
+          {nextPhoto && (
+            <a 
+              class="nav-btn next"
+              href={`/photo/${nextPhoto.id}/`} 
+              aria-label={`Next photo: ${nextPhoto.title}`}
+            >
+              <img class="nav-icon" src="/arrow-right.svg" alt="Next" />
+            </a>
+          )}
+        </div>
       </div>
 
       <!-- Back to gallery link - centered just below the image -->

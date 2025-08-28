@@ -77,13 +77,38 @@ const { photos: pagePhotos, currentPage, totalPages, hasNextPage, hasPrevPage } 
           class={`arrow ${currentPage <= 1 ? "disabled" : ""}`} 
           href={`/${currentPage - 1}/`} 
           aria-label="Previous"
-        >←</a>
+        >
+          <img src="/arrow-left.svg" alt="Previous" class="arrow-icon" />
+        </a>
         <a 
           class={`arrow ${currentPage >= totalPages ? "disabled" : ""}`} 
           href={`/${currentPage + 1}/`} 
           aria-label="Next"
-        >→</a>
+        >
+          <img src="/arrow-right.svg" alt="Next" class="arrow-icon" />
+        </a>
       </div>
     </nav>
+
+    <!-- Gallery footer - Swiss minimal style -->
+    <footer class="gallery-footer">
+      <div class="footer-row">
+        <div class="footer-about">
+          Diseñador de Imagen y Sonido.<br/>
+          Entusiasta de la música, la <a href="https://www.blurfm.com" target="_blank" rel="noopener">radio</a> y el cine.<br/>
+          Amante del cielo, las estrellas y la Wikipedia.
+        </div>
+        <div class="footer-logos">
+          <a href="https://www.blurfm.com" target="_blank" rel="noopener">
+            <img src="/logo_blurfm.svg" alt="blur fm" />
+          </a>
+          <a href="https://www.nico.ar" target="_blank" rel="noopener">
+            <img src="/logo_nico.svg" alt="nico.ar" />
+          </a>
+        </div>
+      </div>
+      <hr class="footer-rule" />
+      <div class="container footer-powered">Powered by <a href="https://www.argensonix.com" target="_blank" rel="noopener">Argensonix Multimedia</a></div>
+    </footer>
   </div>
 </BaseLayout>
