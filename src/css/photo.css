@@ -1,0 +1,186 @@
+/* Photo detail page styles: layout, navigation, and content */
+
+/* Photo detail main container */
+.photo-detail {
+  min-height: 100vh;
+  padding: var(--section-spacing);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-detail .content-container {
+  max-width: var(--content-max-width);
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Header section */
+.photo-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.photo-title {
+  font-size: 2.25rem;
+  font-weight: var(--font-weight-black);
+  color: var(--text-heading);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.photo-date {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  margin: 0 0 1.5rem 0;
+  font-style: italic;
+}
+
+.back-nav {
+  margin-bottom: 1rem;
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: var(--text-primary);
+}
+
+/* Image section with navigation arrows */
+.image-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.photo-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  max-height: 70vh;
+  /* Clean design - no shadows or borders */
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+}
+
+/* Navigation arrows */
+.nav-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+  text-decoration: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-black);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.nav-arrow:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-heading);
+  transform: scale(1.05);
+}
+
+.nav-prev {
+  order: -1;
+}
+
+.nav-next {
+  order: 1;
+}
+
+/* Content section */
+.photo-content {
+  text-align: left;
+  line-height: 1.6;
+}
+
+.photo-content .prose {
+  color: var(--text-primary);
+}
+
+.photo-content .prose h2,
+.photo-content .prose h3 {
+  color: var(--text-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.photo-content .prose p {
+  margin-bottom: 1rem;
+}
+
+.photo-content .prose a {
+  color: var(--text-heading);
+  text-decoration: underline;
+}
+
+.photo-content .prose a:hover {
+  opacity: 0.8;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .photo-detail {
+    padding: 1rem;
+    align-items: flex-start;
+  }
+
+  .photo-title {
+    font-size: 1.75rem;
+  }
+
+  .image-section {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .nav-arrow {
+    position: relative;
+    order: 0;
+  }
+
+  .nav-prev::before {
+    content: "Previous";
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-regular);
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+
+  .nav-next::after {
+    content: "Next";
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-regular);
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,114 @@
+/* Base styles: reset, variables, typography, and global colors */
+
+/* CSS Custom Properties */
+:root {
+  /* Colors */
+  --bg-primary: #FAFAFA;
+  --text-primary: #292E3F;
+  --text-heading: #21346A;
+  --text-secondary: #6b7280;
+  --border-light: #e5e7eb;
+  --hover-bg: #f3f4f6;
+
+  /* Typography */
+  --font-primary: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-black: 900;
+
+  /* Font Sizes - Desktop */
+  --hero-title-size: 48px;
+  --hero-subtitle-size: 32px;
+  --text-base: 16px;
+  --text-sm: 14px;
+
+  /* Spacing */
+  --hero-spacing: 4rem;
+  --section-spacing: 2rem;
+  --content-max-width: 800px;
+  --gallery-max-width: 1200px;
+}
+
+/* Responsive font sizes */
+@media (max-width: 768px) {
+  :root {
+    --hero-title-size: 36px;
+    --hero-subtitle-size: 24px;
+    --hero-spacing: 2rem;
+    --section-spacing: 1rem;
+  }
+}
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-primary);
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+}
+
+/* Typography hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-primary);
+  color: var(--text-heading);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+h1 {
+  font-weight: var(--font-weight-black);
+  font-size: var(--hero-title-size);
+}
+
+h2 {
+  font-weight: var(--font-weight-regular);
+  font-size: var(--hero-subtitle-size);
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Button and interactive elements */
+button, .btn {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-regular);
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Focus styles for accessibility */
+:focus {
+  outline: 2px solid var(--text-heading);
+  outline-offset: 2px;
+}

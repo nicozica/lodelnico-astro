@@ -47,7 +47,7 @@ const { photos: pagePhotos, currentPage, totalPages, hasNextPage, hasPrevPage } 
   title={`Gallery - Page ${currentPage} - Lo del Nico`}
   description="Personal photography gallery by Nicolas from Buenos Aires, Argentina."
 >
-  <main class="gallery-container">
+  <div class="gallery-container">
     <!-- Photo Grid - Only Images (3x3 layout with 4:3 aspect ratio) -->
     <div class="photo-grid">
       {pagePhotos.map((photo: PhotoItem) => (
@@ -82,91 +82,5 @@ const { photos: pagePhotos, currentPage, totalPages, hasNextPage, hasPrevPage } 
         )}
       </div>
     </nav>
-  </main>
+  </div>
 </BaseLayout>
-
-<style>
-  .gallery-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  /* Photo Grid - Simple 3x3 grid with 4:3 aspect ratio images */
-  .photo-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-  }
-
-  .photo-link {
-    display: block;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-  }
-
-  .photo-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  /* Pagination */
-  .pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-    border-top: 1px solid #e5e7eb;
-  }
-
-  .page-info {
-    font-size: 0.9rem;
-    color: #6b7280;
-  }
-
-  .page-controls {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .page-btn {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background: #f3f4f6;
-    color: #374151;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    transition: background-color 0.2s ease;
-  }
-
-  .page-btn:hover {
-    background: #e5e7eb;
-  }
-
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .gallery-container {
-      padding: 1rem;
-    }
-
-    .photo-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .photo-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .pagination {
-      flex-direction: column;
-      gap: 1rem;
-    }
-  }
-</style>
