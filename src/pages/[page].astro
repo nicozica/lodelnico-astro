@@ -52,7 +52,7 @@ const { photos: pagePhotos, currentPage, totalPages, hasNextPage, hasPrevPage } 
     <div class="photo-grid">
       {pagePhotos.map((photo: PhotoItem) => (
         <a 
-          href={`/photo/${photo.id}?from=${currentPage}`} 
+          href={`/photo/${photo.id}/?from=${currentPage}`} 
           class="photo-link"
           aria-label={photo.title}
         >
@@ -75,10 +75,10 @@ const { photos: pagePhotos, currentPage, totalPages, hasNextPage, hasPrevPage } 
       </span>
       <div class="page-controls">
         {hasPrevPage && (
-          <a href={`/${currentPage - 1}`} class="page-btn" aria-label="Previous page">← Prev</a>
+          <a href={`/${currentPage - 1}/`} class="page-btn" aria-label="Previous page">← Prev</a>
         )}
         {hasNextPage && (
-          <a href={`/${currentPage + 1}`} class="page-btn" aria-label="Next page">Next →</a>
+          <a href={`/${currentPage + 1}/`} class="page-btn" aria-label="Next page">Next →</a>
         )}
       </div>
     </nav>

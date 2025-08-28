@@ -1,0 +1,21 @@
+# Apache configuration for Astro static site
+# Ensures proper routing for directory-based build output
+
+Options -MultiViews
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# If the file or directory exists, serve it as-is
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# If /path/index.html exists, serve it (preserve query string)
+RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
+RewriteRule ^(.+)$ $1/index.html [QSA,L]
+
+# Optional fallback to root index.html for unmatched routes
+# RewriteRule . /index.html [QSA,L]
+</IfModule>

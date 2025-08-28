@@ -76,7 +76,7 @@ const formattedDate = formatDateInSpanish(photo.date);
         <!-- Back to Gallery Link -->
         <nav class="back-nav">
           <a 
-            href={`/${calculatedFromPage}`} 
+            href={`/${calculatedFromPage}/`} 
             class="back-link"
             id="back-link"
           >
@@ -90,7 +90,7 @@ const formattedDate = formatDateInSpanish(photo.date);
         <!-- Previous photo arrow -->
         {prevPhoto && (
           <a 
-            href={`/photo/${prevPhoto.id}`} 
+            href={`/photo/${prevPhoto.id}/`} 
             class="nav-arrow nav-prev"
             aria-label={`Previous photo: ${prevPhoto.title}`}
           >
@@ -112,7 +112,7 @@ const formattedDate = formatDateInSpanish(photo.date);
         <!-- Next photo arrow -->
         {nextPhoto && (
           <a 
-            href={`/photo/${nextPhoto.id}`} 
+            href={`/photo/${nextPhoto.id}/`} 
             class="nav-arrow nav-next"
             aria-label={`Next photo: ${nextPhoto.title}`}
           >
@@ -140,7 +140,7 @@ const formattedDate = formatDateInSpanish(photo.date);
   if (fromPage && /^\d+$/.test(fromPage)) {
     const backLink = document.getElementById('back-link');
     if (backLink && backLink instanceof HTMLAnchorElement) {
-      backLink.href = `/${fromPage}`;
+      backLink.href = `/${fromPage}/`;
     }
   }
 </script>

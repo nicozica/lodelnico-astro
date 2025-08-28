@@ -5,10 +5,11 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://lodelnico.com',
   base: '/',
+  trailingSlash: 'always', // Always add trailing slash to URLs
   
   // Build configuration for deployment
   build: {
-    format: 'file', // Generate .html files instead of directories
+    format: 'directory', // Generate directories with index.html files
     assets: '_assets', // Custom assets directory
   },
 
