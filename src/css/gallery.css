@@ -151,7 +151,6 @@
   width: 32px; /* Larger SVG icons */
   height: 32px;
 }
-}
 
 /* Responsive typography for pagination */
 @media (max-width: 767px) {
