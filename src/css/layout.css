@@ -26,6 +26,26 @@
   padding: var(--hero-spacing) 0;
 }
 
+/* Home link in header - no visual changes */
+.home-link {
+  text-decoration: none;
+  color: inherit;
+  display: block; /* Changed to block for better click area */
+  width: 100%;
+  cursor: pointer;
+}
+
+.home-link:hover,
+.home-link:focus {
+  text-decoration: none; /* sin subrayado en el header */
+}
+
+/* Ensure h1 and h2 inside link inherit pointer */
+.home-link .hero-title,
+.home-link .hero-subtitle {
+  cursor: inherit;
+}
+
 .hero-title {
   font-size: var(--hero-title-size);
   font-weight: var(--font-weight-black);

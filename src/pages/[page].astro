@@ -41,7 +41,7 @@ export async function getStaticPaths() {
 }
 
 // Get props from getStaticPaths
-const { photos: pagePhotos, currentPage, totalPages, hasNextPage, hasPrevPage } = Astro.props as Props;
+const { photos: pagePhotos, currentPage, totalPages } = Astro.props as Props;
 ---
 
 <BaseLayout 

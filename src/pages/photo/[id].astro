@@ -50,7 +50,7 @@ export async function getStaticPaths() {
 }
 
 // Get props from getStaticPaths and URL params
-const { photo, prevPhoto, nextPhoto, fromPage: defaultFromPage } = Astro.props as Props;
+const { photo, prevPhoto, nextPhoto } = Astro.props as Props;
 
 // Get the 'from' parameter from URL query string (client-side will handle this)
 // For now, we'll use the default or calculate based on photo position
@@ -73,81 +73,120 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
   showHero={false}
 >
   <main class={`photo-page ${hasText ? 'has-text' : 'no-text'}`}>
-    <div class="content-container">
-      <!-- Header with title and date (date just below title) -->
-      <div class="content">
-        <header class="photo-header">
-          <h1 class="photo-title">{decodedTitle}</h1>
-          <div class="photo-date">{formattedDate}</div>
-        </header>
-      </div>
-
-      <!-- Image section with wider container and navigation arrows -->
-      <div class="image-wrapper">
-        <!-- Main image with wider container -->
-        <div class="image-wide">
-          <img 
-            src={photo.image} 
-            alt={decodedTitle}
-            width="1200"
-            height="800"
-          />
-        </div>
-
-        <!-- Navigation arrows using SVG files -->
-        <div class="photo-nav">
-          {prevPhoto && (
-            <a 
-              class="nav-btn prev"
-              href={`/photo/${prevPhoto.id}/`} 
-              aria-label={`Previous photo: ${prevPhoto.title}`}
-            >
-              <img class="nav-icon" src="/arrow-left.svg" alt="Previous" />
-            </a>
-          )}
-          
-          {nextPhoto && (
-            <a 
-              class="nav-btn next"
-              href={`/photo/${nextPhoto.id}/`} 
-              aria-label={`Next photo: ${nextPhoto.title}`}
-            >
-              <img class="nav-icon" src="/arrow-right.svg" alt="Next" />
-            </a>
-          )}
-        </div>
-      </div>
-
-      <!-- Back to gallery link - centered just below the image -->
-      <div class="photo-back">
+    
+    <!-- Mobile Navigation Bar (visible only on mobile) -->
+    <div class="mobile-nav-bar">
+      {prevPhoto && (
         <a 
-          href={`/${calculatedFromPage}/`} 
-          id="back-link"
+          class="mobile-nav-btn prev"
+          href={`/photo/${prevPhoto.id}/`} 
+          aria-label={`Previous photo: ${prevPhoto.title}`}
         >
-          ← Back to gallery
+          <img src="/arrow-left.svg" alt="Previous" />
         </a>
-      </div>
-
-      <!-- Content section with narrow text container -->
-      {photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim() && (
-        <section class="content photo-content" style="margin-top: 40px;">
-          <div class="prose" set:html={photo.contentHtmlNoImg} />
-        </section>
+      )}
+      
+      <a 
+        class="mobile-back-link"
+        href={`/${calculatedFromPage}/`} 
+        id="mobile-back-link"
+      >
+        Back to gallery
+      </a>
+      
+      {nextPhoto && (
+        <a 
+          class="mobile-nav-btn next"
+          href={`/photo/${nextPhoto.id}/`} 
+          aria-label={`Next photo: ${nextPhoto.title}`}
+        >
+          <img src="/arrow-right.svg" alt="Next" />
+        </a>
       )}
     </div>
-  </div>
+
+    <!-- Desktop Header (title and date above image on desktop) -->
+    <header class="desktop-header">
+      <h1 class="photo-title">{decodedTitle}</h1>
+      <div class="photo-date">{formattedDate}</div>
+    </header>
+
+    <!-- Main Photo Container -->
+    <div class="photo-container">
+      <!-- Desktop Navigation Arrows (viewport-centered) -->
+      <div class="desktop-nav">
+        {prevPhoto && (
+          <a 
+            class="desktop-nav-btn prev"
+            href={`/photo/${prevPhoto.id}/`} 
+            aria-label={`Previous photo: ${prevPhoto.title}`}
+          >
+            <img src="/arrow-left.svg" alt="Previous" />
+          </a>
+        )}
+        
+        {nextPhoto && (
+          <a 
+            class="desktop-nav-btn next"
+            href={`/photo/${nextPhoto.id}/`} 
+            aria-label={`Next photo: ${nextPhoto.title}`}
+          >
+            <img src="/arrow-right.svg" alt="Next" />
+          </a>
+        )}
+      </div>
+
+      <!-- Photo Image -->
+      <div class="photo-image">
+        <img 
+          src={photo.image} 
+          alt={decodedTitle}
+          width="1200"
+          height="800"
+        />
+      </div>
+    </div>
+
+    <!-- Desktop Back Link (below image on desktop) -->
+    <div class="desktop-back">
+      <a 
+        href={`/${calculatedFromPage}/`} 
+        id="desktop-back-link"
+      >
+        ← Back to gallery
+      </a>
+    </div>
+
+    <!-- Mobile Header (title and date below image on mobile) -->
+    <header class="mobile-header">
+      <h1 class="photo-title">{decodedTitle}</h1>
+      <div class="photo-date">{formattedDate}</div>
+    </header>
+
+    <!-- Content section -->
+    {photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim() && (
+      <section class="photo-content">
+        <div class="prose" set:html={photo.contentHtmlNoImg} />
+      </section>
+    )}
+  </main>
 </BaseLayout>
 
 <!-- Client-side script to handle 'from' parameter -->
 <script>
-  // Update back link based on 'from' URL parameter
+  // Update back links based on 'from' URL parameter
   const urlParams = new URLSearchParams(window.location.search);
   const fromPage = urlParams.get('from');
   
   if (fromPage && /^\d+$/.test(fromPage)) {
-    const backLink = document.getElementById('back-link');
-    if (backLink && backLink instanceof HTMLAnchorElement) {
-      backLink.href = `/${fromPage}/`;
+    const desktopBackLink = document.getElementById('desktop-back-link');
+    const mobileBackLink = document.getElementById('mobile-back-link');
+    
+    if (desktopBackLink && desktopBackLink instanceof HTMLAnchorElement) {
+      desktopBackLink.href = `/${fromPage}/`;
+    }
+    if (mobileBackLink && mobileBackLink instanceof HTMLAnchorElement) {
+      mobileBackLink.href = `/${fromPage}/`;
     }
   }
 </script>

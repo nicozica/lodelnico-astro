@@ -204,6 +204,23 @@
   color: #2A2E3B;
 }
 
+/* Swiss-style footer links */
+.footer-about a,
+.footer-powered a {
+  color: var(--brand-blue);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.footer-about a:hover,
+.footer-about a:focus,
+.footer-powered a:hover,
+.footer-powered a:focus {
+  color: var(--brand-blue-ink);
+}
+
 .footer-logos {
   display: flex;
   align-items: center;
