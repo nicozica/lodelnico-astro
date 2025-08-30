@@ -53,6 +53,12 @@ html {
   font-family: var(--font-primary);
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
+  /* Font rendering optimizations to prevent hairlines */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-synthesis-weight: none;
+  font-optical-sizing: auto;
 }
 
 body {
@@ -70,7 +76,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-primary);
   color: var(--text-heading);
   line-height: 1.2;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px; /* Use integer value to avoid sub-pixel issues */
 }
 
 h1 {
@@ -109,6 +115,24 @@ button, .btn {
   border: none;
   background: none;
   transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Typography rendering fixes to prevent hairlines in production */
+.hero-title,
+.hero-subtitle,
+h1, h2 {
+  transform: none !important;
+  filter: none !important;
+  backface-visibility: visible;
+  will-change: auto;
+  line-height: 1.2;
+  -webkit-text-stroke: 0 transparent;
+  /* Use fixed font weights to avoid variable font artifacts */
+  font-variation-settings: "wght" 900; /* For titles */
+}
+
+.hero-subtitle {
+  font-variation-settings: "wght" 400; /* For subtitles */
 }
 
 /* Focus styles for accessibility */
