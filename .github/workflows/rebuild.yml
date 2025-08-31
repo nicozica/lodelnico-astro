@@ -13,9 +13,9 @@ on:
   repository_dispatch:
     types: [wp_photoblog_updated]
   
-  # Schedule - rebuild daily at 6 AM UTC
-  schedule:
-    - cron: '0 6 * * *'
+  # 🔒 Desactivado: schedule que vaciaba el server
+  # schedule:
+  #   - cron: '0 6 * * *'
 
 jobs:
   rebuild-and-deploy:
@@ -46,10 +46,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           
-          # Add the updated JSON file
           git add src/data/photoblog.json
-          
-          # Check if there are changes to commit
           if git diff --cached --quiet; then
             echo "No changes to photoblog data"
           else
@@ -65,7 +62,19 @@ jobs:
         env:
           NODE_ENV: production
 
-      # Deploy steps - customize based on your hosting provider
+      - name: Sanity check dist
+        run: |
+          if [ ! -s dist/index.html ]; then
+            echo "❌ Build failed: dist/index.html missing"
+            exit 1
+          fi
+          files=$(find dist -type f | wc -l)
+          if [ "$files" -lt 5 ]; then
+            echo "❌ Build failed: dist has too few files ($files)"
+            exit 1
+          fi
+          echo "✅ Dist sanity check passed ($files files)"
+
       - name: Setup SSH agent
         if: ${{ env.SSH_PRIVATE_KEY != '' }}
         uses: webfactory/ssh-agent@v0.9.0
@@ -86,22 +95,14 @@ jobs:
       - name: Deploy to server via SSH
         if: ${{ env.SSH_PRIVATE_KEY != '' }}
         run: |
-          rsync -az --delete \
+          rsync -az --delete-delay \
             --exclude='.htaccess' \
             --exclude='error_log' \
             --exclude='logs/' \
             -e "ssh -p ${{ secrets.SSH_PORT || '22' }}" \
-            dist/ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/lodelnico-astro/"
+            dist/ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/lodelnico-astro/dist/"
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      # Alternative: Deploy to GitHub Pages
-      # Uncomment if you want to use GitHub Pages instead of SSH
-      # - name: Deploy to GitHub Pages
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: ./dist
 
       - name: Notify completion
         run: |
