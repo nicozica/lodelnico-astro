@@ -233,6 +233,10 @@
   display: block;
 }
 
+.footer-logos img.logo-nico {
+  height: 86px; /* Specific height for nico.ar logo for optical compensation */
+}
+
 .footer-rule {
   margin: 24px 0 16px;
   border: 0;
@@ -260,6 +264,10 @@
   
   .footer-logos img {
     height: 44px; /* Smaller logos in mobile */
+  }
+  
+  .footer-logos img.logo-nico {
+    height: 52px; /* Proportionally larger nico.ar logo in mobile (44px + ~18% = 52px) */
   }
   
   .footer-about {

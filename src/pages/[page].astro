@@ -42,10 +42,21 @@ export async function getStaticPaths() {
 
 // Get props from getStaticPaths
 const { photos: pagePhotos, currentPage, totalPages } = Astro.props as Props;
+
+// Dynamic title based on page number
+const getPageTitle = (page: number) => {
+  if (page === 1) {
+    return "Estás en lo del Nico. - Bienvenido a mi nube.";
+  } else {
+    return `Estás en lo del Nico. - Página ${page}`;
+  }
+};
+
+const pageTitle = getPageTitle(currentPage);
 ---
 
 <BaseLayout 
-  title={`Gallery - Page ${currentPage} - Lo del Nico`}
+  title={pageTitle}
   description="Personal photography gallery by Nicolas from Buenos Aires, Argentina."
 >
   <div class="gallery-container">
@@ -103,7 +114,7 @@ const { photos: pagePhotos, currentPage, totalPages } = Astro.props as Props;
             <img src="/logo_blurfm.svg" alt="blur fm" />
           </a>
           <a href="https://www.nico.ar" target="_blank" rel="noopener">
-            <img src="/logo_nico.svg" alt="nico.ar" />
+            <img src="/logo_nico.svg" alt="nico.ar" class="logo-nico" />
           </a>
         </div>
       </div>
