@@ -8,13 +8,15 @@ Un sitio web estático construido con Astro que funciona como galería de fotogr
 - **Diseño responsivo**: Grid adaptable de 3x3 en desktop, 2x2 en tablet, 1x1 en móvil
 - **Carga optimizada**: Las imágenes se cargan de forma lazy y en tamaños apropiados
 - **Build estático**: Generación estática para máxima performance
-- **Multiidioma**: Soporte para español (AR)
+- **Webhook automation**: Deploy automático cuando se publican nuevas fotos en WordPress
+- **SEO optimizado**: Meta tags dinámicos, sitemap automático, URLs limpias
 
 ## 🛠️ Tecnologías
 
 - [Astro](https://astro.build/) - Framework para sitios estáticos
 - [WordPress REST API](https://developer.wordpress.org/rest-api/) - Fuente de contenido
 - TypeScript - Type safety
+- GitHub Actions - CI/CD automático
 - CSS moderno - Grid layouts y responsive design
 
 ## 📦 Instalación

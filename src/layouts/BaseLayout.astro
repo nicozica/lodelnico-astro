@@ -30,7 +30,21 @@ import '../css/photo.css';
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Favicon (múltiples formatos para máxima compatibilidad) -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any" />
+  <link rel="alternate icon" href="/favicon.svg" />
+  <link rel="mask-icon" href="/favicon.svg" color="#21346A" />
+  
+  <!-- Fallbacks para navegadores que no soportan SVG -->
+  <link rel="shortcut icon" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+  <meta name="msapplication-TileImage" content="/favicon.svg" />
+  
+  <!-- Meta tags para web apps -->
+  <meta name="theme-color" content="#21346A" />
+  <meta name="msapplication-TileColor" content="#21346A" />
+  <meta name="application-name" content="Estás en lo del Nico" />
   
   <!-- Primary Meta Tags -->
   <title>{title}</title>
