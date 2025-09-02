@@ -1,13 +1,13 @@
 ---
-// Root redirect page - completely blank to avoid flicker
+// Root redirect page - blank but using Astro layout
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
-  
+
+<BaseLayout 
+  title=""
+  description="Redirecting to gallery"
+  showHero={false}
+>
   <!-- Immediate redirect via meta refresh (0 seconds) -->
   <meta http-equiv="refresh" content="0; url=/1/">
   
@@ -16,16 +16,13 @@
     window.location.replace('/1/');
   </script>
   
-  <!-- Completely blank page - no flicker -->
+  <!-- Completely blank content - no flicker -->
   <style>
     body { 
-      margin: 0; 
-      padding: 0; 
-      background: transparent; 
+      background: white !important;
+    }
+    .main-content {
+      display: none !important;
     }
   </style>
-</head>
-<body>
-  <!-- Completely empty body -->
-</body>
-</html>
+</BaseLayout>

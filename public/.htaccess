@@ -4,7 +4,7 @@
 Options -MultiViews
 DirectoryIndex index.html
 
-# Custom error pages
+# Custom error pages  
 ErrorDocument 404 /404.html
 
 <IfModule mod_rewrite.c>
