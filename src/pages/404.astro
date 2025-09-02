@@ -1,151 +1,42 @@
 ---
-// Custom 404 page
+/* All comments in English */
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Get the attempted path to show a helpful hint
+const attempted = Astro.url?.pathname ?? '';
+
+const pageTitle = 'Page not found';
+const pageDesc  = 'The page you are looking for does not exist or was moved.';
 ---
 
-<BaseLayout 
-  title="Página no encontrada - Estás en lo del Nico."
-  description="La página que buscas no existe"
-  showHero={false}
->
-  <main class="error-page">
-    <div class="error-content">
-      <!-- Large 404 number -->
-      <div class="error-number">404</div>
-      
-      <!-- Message -->
-      <h1 class="error-title">Página no encontrada</h1>
-      <p class="error-description">
-        Lo siento, la página que buscas no existe o fue movida.
-      </p>
-      
-      <!-- Action buttons -->
-      <div class="error-actions">
-        <a href="/1/" class="btn-primary">
-          Ver mi galería de fotos
-        </a>
-        <button onclick="history.back()" class="btn-secondary">
-          Volver atrás
-        </button>
-      </div>
-      
-      <!-- Optional: Recent photos preview -->
-      <div class="error-suggestion">
-        <p>¿Tal vez buscabas alguna de mis fotos más recientes?</p>
-      </div>
-    </div>
-  </main>
+<BaseLayout title={pageTitle} description={pageDesc} showHero={false}>
+  <section class="stack">
+    <h1 class="code">404</h1>
+    <p class="lead">
+      <!-- Friendly message with the requested path -->
+      <!-- Keep it short and calm -->
+      No encontramos <code>{attempted}</code>.
+    </p>
+    <nav class="actions">
+      <a class="btn" href="/1/">← Back to gallery</a>
+      <a class="btn" href="/1/">View all photos</a>
+    </nav>
+  </section>
+
+  <style>
+    /* Minimal, framework-agnostic styles that blend in */
+    .stack {
+      min-height: 60vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem; text-align: center; padding: 3rem 1rem;
+    }
+    .code { font-size: clamp(3rem, 8vw, 6rem); letter-spacing: .04em; }
+    .lead { opacity: .85 }
+    .btn {
+      display: inline-block; padding: .75rem 1rem; border-radius: .75rem;
+      border: 1px solid hsl(0 0% 85%); text-decoration: none;
+    }
+    .actions { display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center; }
+  </style>
 </BaseLayout>
-
-<style>
-  .error-page {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    text-align: center;
-  }
-
-  .error-content {
-    max-width: 600px;
-    width: 100%;
-  }
-
-  .error-number {
-    font-size: 8rem;
-    font-weight: 900;
-    color: #21346A;
-    line-height: 1;
-    margin-bottom: 1rem;
-    opacity: 0.8;
-  }
-
-  .error-title {
-    font-size: 2.5rem;
-    font-weight: 900;
-    color: #2a2e3b;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-  }
-
-  .error-description {
-    font-size: 1.2rem;
-    color: #6b7280;
-    margin-bottom: 3rem;
-    line-height: 1.6;
-  }
-
-  .error-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 3rem;
-  }
-
-  .btn-primary, .btn-secondary {
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    border: none;
-    font-family: inherit;
-  }
-
-  .btn-primary {
-    background-color: #21346A;
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background-color: #1a2854;
-    transform: translateY(-1px);
-  }
-
-  .btn-secondary {
-    background-color: transparent;
-    color: #21346A;
-    border: 2px solid #21346A;
-  }
-
-  .btn-secondary:hover {
-    background-color: #21346A;
-    color: white;
-    transform: translateY(-1px);
-  }
-
-  .error-suggestion {
-    padding-top: 2rem;
-    border-top: 1px solid #e5e7eb;
-  }
-
-  .error-suggestion p {
-    color: #6b7280;
-    font-style: italic;
-  }
-
-  /* Mobile adjustments */
-  @media (max-width: 640px) {
-    .error-number {
-      font-size: 6rem;
-    }
-
-    .error-title {
-      font-size: 2rem;
-    }
-
-    .error-actions {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .btn-primary, .btn-secondary {
-      width: 100%;
-      max-width: 280px;
-    }
-  }
-</style>

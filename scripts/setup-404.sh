@@ -1,14 +1,13 @@
 #!/bin/bash
 
-# Post-build script to set up 404 page correctly
-echo "Setting up 404 page for Apache..."
+# Simple check that 404.html was built correctly
+echo "Checking 404 page..."
 
-# Apache will serve 404.html directly, no need for directory structure
 if [ -f "dist/404.html" ]; then
-    echo "✅ 404.html is ready for Apache"
+    echo "✅ 404.html ready for Apache"
 else
     echo "❌ 404.html not found!"
     exit 1
 fi
 
-echo "✅ 404 page setup complete!"
+echo "✅ All set!"

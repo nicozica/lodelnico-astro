@@ -4,7 +4,7 @@
 Options -MultiViews
 DirectoryIndex index.html
 
-# Custom error pages  
+# Use Astro's static 404 page
 ErrorDocument 404 /404.html
 
 <IfModule mod_rewrite.c>
