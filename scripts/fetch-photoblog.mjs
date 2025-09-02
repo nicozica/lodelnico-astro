@@ -8,7 +8,7 @@ const __dirname = dirname(__filename);
 
 // Configuration
 const CONFIG = {
-  baseUrl: 'https://www.lodelnico.com/wp-json/wp/v2',
+  baseUrl: 'https://wp.lodelnico.com/wp-json/wp/v2',
   perPage: 100,
   timeout: 10000,
   maxRetries: 3,
