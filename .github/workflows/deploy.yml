@@ -59,4 +59,4 @@ jobs:
             --exclude='logs/' \
             --exclude='wp/' \
             -e "ssh -p ${{ secrets.SSH_PORT }}" \
-            dist/ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/lodelnico-astro/dist/"
+            dist/ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/lodelnico/dist/"
