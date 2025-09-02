@@ -1,27 +1,31 @@
 ---
-// Homepage with immediate redirect using meta refresh
-import BaseLayout from '../layouts/BaseLayout.astro';
+// Root redirect page - completely blank to avoid flicker
 ---
-
-<BaseLayout 
-  title="Estás en lo del Nico. - Bienvenido a mi nube."
-  description="Galería de fotos personal de Nicolas"
-  showHero={false}
->
-  <!-- Meta refresh for immediate redirect (0 seconds) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  
+  <!-- Immediate redirect via meta refresh (0 seconds) -->
   <meta http-equiv="refresh" content="0; url=/1/">
   
-  <!-- Fallback content for very slow browsers -->
-  <div style="text-align: center; padding: 50px; font-family: 'Figtree', sans-serif;">
-    <h1>Estás en lo del Nico.</h1>
-    <p>Redirigiendo a mi galería de fotos...</p>
-    <a href="/1/" style="color: #21346A; text-decoration: none;">
-      Click aquí si no eres redirigido automáticamente
-    </a>
-  </div>
-  
-  <!-- JavaScript fallback for instant redirect -->
+  <!-- JavaScript fallback for immediate redirect -->
   <script>
-    window.location.href = '/1/';
+    window.location.replace('/1/');
   </script>
-</BaseLayout>
+  
+  <!-- Completely blank page - no flicker -->
+  <style>
+    body { 
+      margin: 0; 
+      padding: 0; 
+      background: transparent; 
+    }
+  </style>
+</head>
+<body>
+  <!-- Completely empty body -->
+</body>
+</html>
