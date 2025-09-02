@@ -2,6 +2,7 @@
 // Photo detail page with title, date, image and content
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import type { PhotoItem } from '../../types/photoblog';
+import { formatDateTime } from '../../utils/formatDateTime';
 import he from 'he';
 
 interface Props {
@@ -9,21 +10,6 @@ interface Props {
   prevPhoto: PhotoItem | null;
   nextPhoto: PhotoItem | null;
   fromPage: number;
-}
-
-// Format date in Spanish
-function formatDateInSpanish(dateString: string): string {
-  const date = new Date(dateString);
-  const months = [
-    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
-  ];
-  
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-  
-  return `${day} de ${month} de ${year}`;
 }
 
 // Generate static paths for all photos
@@ -59,8 +45,8 @@ const allPhotos = photoblogData.default as PhotoItem[];
 const photoIndex = allPhotos.findIndex(p => p.id === photo.id);
 const calculatedFromPage = Math.ceil((photoIndex + 1) / 9); // 9 photos per page
 
-// Format publication date
-const formattedDate = formatDateInSpanish(photo.date);
+// Format publication date and time using taken_at field with fallback
+const formattedDateTime = formatDateTime(photo.taken_at ?? photo.date);
 const decodedTitle = he.decode(photo.title);
 
 // Check if photo has additional text content for conditional styling
@@ -108,7 +94,7 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
     <!-- Desktop Header (title and date above image on desktop) -->
     <header class="desktop-header">
       <h1 class="photo-title">{decodedTitle}</h1>
-      <div class="photo-date">{formattedDate}</div>
+      <div class="photo-date">{formattedDateTime}</div>
     </header>
 
     <!-- Main Photo Container -->
@@ -160,7 +146,7 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
     <!-- Mobile Header (title and date below image on mobile) -->
     <header class="mobile-header">
       <h1 class="photo-title">{decodedTitle}</h1>
-      <div class="photo-date">{formattedDate}</div>
+      <div class="photo-date">{formattedDateTime}</div>
     </header>
 
     <!-- Content section -->

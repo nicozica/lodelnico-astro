@@ -318,6 +318,10 @@ async function fetchAllPostsWithImages() {
           
           const postDate = new Date(post.date);
           
+          // Prefer ACF's taken_at if present; otherwise use WordPress post date.
+          // Always persist an ISO string we can format in Astro.
+          const takenAtIso = post?.acf?.taken_at ?? post?.date;
+          
           // Process content if available
           const contentRendered = post.content?.rendered || '';
           const contentText = contentRendered ? stripHTML(contentRendered) : '';
@@ -331,6 +335,7 @@ async function fetchAllPostsWithImages() {
             id: post.id,
             title: stripHTML(post.title?.rendered) || 'Untitled',
             date: post.date,
+            taken_at: takenAtIso, // unified field for date-time formatting
             year: postDate.getFullYear(),
             url: post.link,
             image: imageUrl,
