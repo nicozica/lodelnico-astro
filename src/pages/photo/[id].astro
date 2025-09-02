@@ -46,6 +46,12 @@ const calculatedFromPage = Math.ceil((photoIndex + 1) / 9); // 9 photos per page
 
 // Get raw date/time for client-side formatting (to handle timezone correctly)
 const rawDateTime = photo.taken_at ?? photo.date;
+// Create a basic fallback for no-JS users
+const basicFallback = new Date(rawDateTime).toLocaleDateString('es-AR', { 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric' 
+});
 const decodedTitle = he.decode(photo.title);
 
 // Check if photo has additional text content for conditional styling
@@ -93,7 +99,10 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
     <!-- Desktop Header (title and date above image on desktop) -->
     <header class="desktop-header">
       <h1 class="photo-title">{decodedTitle}</h1>
-      <div class="photo-date" data-raw-date={rawDateTime}>Loading...</div>
+      <div class="photo-date" data-raw-date={rawDateTime}>
+        <noscript>{basicFallback}</noscript>
+        <span class="js-date">Loading...</span>
+      </div>
     </header>
 
     <!-- Main Photo Container -->
@@ -145,7 +154,10 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
     <!-- Mobile Header (title and date below image on mobile) -->
     <header class="mobile-header">
       <h1 class="photo-title">{decodedTitle}</h1>
-      <div class="photo-date" data-raw-date={rawDateTime}>Loading...</div>
+      <div class="photo-date" data-raw-date={rawDateTime}>
+        <noscript>{basicFallback}</noscript>
+        <span class="js-date">Loading...</span>
+      </div>
     </header>
 
     <!-- Content section -->
@@ -160,33 +172,80 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
 <!-- Client-side script to handle 'from' parameter and keyboard navigation -->
 <script>
   // Format dates on client-side to respect Argentina timezone
-  document.addEventListener('DOMContentLoaded', () => {
+  function formatPhotoDate() {
+    console.log('Starting date formatting...');
     const dateElements = document.querySelectorAll('.photo-date[data-raw-date]');
+    console.log('Found date elements:', dateElements.length);
     
-    dateElements.forEach(element => {
+    dateElements.forEach((element, index) => {
       const rawDate = element.getAttribute('data-raw-date');
+      const jsDateSpan = element.querySelector('.js-date');
+      const targetElement = jsDateSpan || element;
+      
+      console.log(`Element ${index}: rawDate =`, rawDate);
       
       if (rawDate) {
         try {
           const date = new Date(rawDate);
-          const formatted = new Intl.DateTimeFormat('es-AR', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-            timeZone: 'America/Argentina/Buenos_Aires'
-          }).format(date);
+          console.log(`Element ${index}: parsed date =`, date);
           
-          element.textContent = formatted;
+          if (isNaN(date.getTime())) {
+            console.error(`Element ${index}: Invalid date`, rawDate);
+            targetElement.textContent = 'Fecha inválida';
+            return;
+          }
+          
+          // Try using Intl.DateTimeFormat with Argentina timezone
+          let formatted;
+          try {
+            formatted = new Intl.DateTimeFormat('es-AR', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+              timeZone: 'America/Argentina/Buenos_Aires'
+            }).format(date);
+          } catch (intlError) {
+            console.warn(`Intl.DateTimeFormat failed, using fallback:`, intlError);
+            // Fallback: adjust manually for Argentina timezone (UTC-3)
+            const argentinaOffset = -3; // Argentina is UTC-3
+            const utcTime = date.getTime() + (date.getTimezoneOffset() * 60000);
+            const argentinaTime = new Date(utcTime + (argentinaOffset * 3600000));
+            
+            const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                          'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+            
+            const day = argentinaTime.getDate();
+            const month = months[argentinaTime.getMonth()];
+            const year = argentinaTime.getFullYear();
+            const hours = argentinaTime.getHours().toString().padStart(2, '0');
+            const minutes = argentinaTime.getMinutes().toString().padStart(2, '0');
+            
+            formatted = `${day} de ${month} de ${year}, ${hours}:${minutes}`;
+          }
+          
+          console.log(`Element ${index}: formatted =`, formatted);
+          targetElement.textContent = formatted;
+          
         } catch (error) {
-          console.error('Error formatting date:', error);
-          element.textContent = 'Fecha no disponible';
+          console.error(`Element ${index}: Error formatting:`, error);
+          targetElement.textContent = 'Error de formato';
         }
+      } else {
+        console.log(`Element ${index}: No raw date found`);
+        targetElement.textContent = 'Sin fecha';
       }
     });
-  });
+  }
+
+  // Run when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', formatPhotoDate);
+  } else {
+    formatPhotoDate();
+  }
 
   // Update back links based on 'from' URL parameter
   const urlParams = new URLSearchParams(window.location.search);

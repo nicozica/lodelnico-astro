@@ -303,3 +303,12 @@
 .photo-content .prose a:hover {
   opacity: 0.8;
 }
+
+/* JavaScript date loading states */
+.js-date {
+  display: inline;
+}
+
+.photo-date noscript {
+  display: inline;
+}
