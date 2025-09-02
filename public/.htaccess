@@ -4,8 +4,15 @@
 Options -MultiViews
 DirectoryIndex index.html
 
+# Custom error pages
+ErrorDocument 404 /404/
+
 <IfModule mod_rewrite.c>
 RewriteEngine On
+
+# Redirect root to first gallery page (invisible to user)
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule ^$ /1/ [R=301,L]
 
 # If the file or directory exists, serve it as-is
 RewriteCond %{REQUEST_FILENAME} -f [OR]

@@ -1,4 +1,27 @@
 ---
-// Redirect root to first page of gallery with trailing slash
-return Astro.redirect(`${import.meta.env.BASE_URL}1/`, 308);
+// Homepage with immediate redirect using meta refresh
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
+
+<BaseLayout 
+  title="Estás en lo del Nico. - Bienvenido a mi nube."
+  description="Galería de fotos personal de Nicolas"
+  showHero={false}
+>
+  <!-- Meta refresh for immediate redirect (0 seconds) -->
+  <meta http-equiv="refresh" content="0; url=/1/">
+  
+  <!-- Fallback content for very slow browsers -->
+  <div style="text-align: center; padding: 50px; font-family: 'Figtree', sans-serif;">
+    <h1>Estás en lo del Nico.</h1>
+    <p>Redirigiendo a mi galería de fotos...</p>
+    <a href="/1/" style="color: #21346A; text-decoration: none;">
+      Click aquí si no eres redirigido automáticamente
+    </a>
+  </div>
+  
+  <!-- JavaScript fallback for instant redirect -->
+  <script>
+    window.location.href = '/1/';
+  </script>
+</BaseLayout>
