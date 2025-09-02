@@ -2,7 +2,6 @@
 // Photo detail page with title, date, image and content
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import type { PhotoItem } from '../../types/photoblog';
-import { formatDateTime } from '../../utils/formatDateTime';
 import he from 'he';
 
 interface Props {
@@ -45,8 +44,8 @@ const allPhotos = photoblogData.default as PhotoItem[];
 const photoIndex = allPhotos.findIndex(p => p.id === photo.id);
 const calculatedFromPage = Math.ceil((photoIndex + 1) / 9); // 9 photos per page
 
-// Format publication date and time using taken_at field with fallback
-const formattedDateTime = formatDateTime(photo.taken_at ?? photo.date);
+// Get raw date/time for client-side formatting (to handle timezone correctly)
+const rawDateTime = photo.taken_at ?? photo.date;
 const decodedTitle = he.decode(photo.title);
 
 // Check if photo has additional text content for conditional styling
@@ -94,7 +93,7 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
     <!-- Desktop Header (title and date above image on desktop) -->
     <header class="desktop-header">
       <h1 class="photo-title">{decodedTitle}</h1>
-      <div class="photo-date">{formattedDateTime}</div>
+      <div class="photo-date" data-raw-date={rawDateTime}>Loading...</div>
     </header>
 
     <!-- Main Photo Container -->
@@ -146,7 +145,7 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
     <!-- Mobile Header (title and date below image on mobile) -->
     <header class="mobile-header">
       <h1 class="photo-title">{decodedTitle}</h1>
-      <div class="photo-date">{formattedDateTime}</div>
+      <div class="photo-date" data-raw-date={rawDateTime}>Loading...</div>
     </header>
 
     <!-- Content section -->
@@ -160,6 +159,35 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
 
 <!-- Client-side script to handle 'from' parameter and keyboard navigation -->
 <script>
+  // Format dates on client-side to respect Argentina timezone
+  document.addEventListener('DOMContentLoaded', () => {
+    const dateElements = document.querySelectorAll('.photo-date[data-raw-date]');
+    
+    dateElements.forEach(element => {
+      const rawDate = element.getAttribute('data-raw-date');
+      
+      if (rawDate) {
+        try {
+          const date = new Date(rawDate);
+          const formatted = new Intl.DateTimeFormat('es-AR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: 'America/Argentina/Buenos_Aires'
+          }).format(date);
+          
+          element.textContent = formatted;
+        } catch (error) {
+          console.error('Error formatting date:', error);
+          element.textContent = 'Fecha no disponible';
+        }
+      }
+    });
+  });
+
   // Update back links based on 'from' URL parameter
   const urlParams = new URLSearchParams(window.location.search);
   const fromPage = urlParams.get('from');

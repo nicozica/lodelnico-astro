@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Client-side Date Formatting</title>
+</head>
+<body>
+    <h1>Testing Date Formatting</h1>
+    
+    <div class="photo-date" data-raw-date="2025-08-28T06:25:49">Loading...</div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateElements = document.querySelectorAll('.photo-date[data-raw-date]');
+            
+            dateElements.forEach(element => {
+                const rawDate = element.getAttribute('data-raw-date');
+                
+                if (rawDate) {
+                    try {
+                        const date = new Date(rawDate);
+                        const formatted = new Intl.DateTimeFormat('es-AR', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false,
+                            timeZone: 'America/Argentina/Buenos_Aires'
+                        }).format(date);
+                        
+                        element.textContent = formatted;
+                        console.log('Date formatted:', formatted);
+                    } catch (error) {
+                        console.error('Error formatting date:', error);
+                        element.textContent = 'Fecha no disponible';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
