@@ -123,3 +123,46 @@ const pageTitle = getPageTitle(currentPage);
     </footer>
   </div>
 </BaseLayout>
+
+<!-- Client-side script for gallery keyboard navigation -->
+<script define:vars={{ currentPage, totalPages }}>
+  // Handle keyboard navigation for gallery pages
+  let isNavigating = false;
+  
+  document.addEventListener('keydown', (event) => {
+    // Ignore if user is typing in an input field
+    if (event.target instanceof HTMLInputElement || 
+        event.target instanceof HTMLTextAreaElement ||
+        event.target instanceof HTMLSelectElement) {
+      return;
+    }
+
+    // Prevent multiple rapid navigation events
+    if (isNavigating) {
+      return;
+    }
+
+    // Prevent default behavior and stop propagation for our handled keys
+    switch (event.key) {
+      case 'ArrowLeft':
+        // Navigate to previous gallery page
+        if (currentPage > 1) {
+          event.preventDefault();
+          event.stopPropagation();
+          isNavigating = true;
+          window.location.href = `/${currentPage - 1}/`;
+        }
+        break;
+      
+      case 'ArrowRight':
+        // Navigate to next gallery page
+        if (currentPage < totalPages) {
+          event.preventDefault();
+          event.stopPropagation();
+          isNavigating = true;
+          window.location.href = `/${currentPage + 1}/`;
+        }
+        break;
+    }
+  });
+</script>

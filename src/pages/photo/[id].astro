@@ -172,21 +172,73 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
   </main>
 </BaseLayout>
 
-<!-- Client-side script to handle 'from' parameter -->
+<!-- Client-side script to handle 'from' parameter and keyboard navigation -->
 <script>
   // Update back links based on 'from' URL parameter
   const urlParams = new URLSearchParams(window.location.search);
   const fromPage = urlParams.get('from');
+  
+  let backUrl = `/${fromPage && /^\d+$/.test(fromPage) ? fromPage : '1'}/`;
   
   if (fromPage && /^\d+$/.test(fromPage)) {
     const desktopBackLink = document.getElementById('desktop-back-link');
     const mobileBackLink = document.getElementById('mobile-back-link');
     
     if (desktopBackLink && desktopBackLink instanceof HTMLAnchorElement) {
-      desktopBackLink.href = `/${fromPage}/`;
+      desktopBackLink.href = backUrl;
     }
     if (mobileBackLink && mobileBackLink instanceof HTMLAnchorElement) {
-      mobileBackLink.href = `/${fromPage}/`;
+      mobileBackLink.href = backUrl;
     }
   }
+
+  // Handle keyboard navigation with debouncing
+  let isNavigating = false;
+  
+  document.addEventListener('keydown', (event) => {
+    // Ignore if user is typing in an input field
+    if (event.target instanceof HTMLInputElement || 
+        event.target instanceof HTMLTextAreaElement ||
+        event.target instanceof HTMLSelectElement) {
+      return;
+    }
+
+    // Prevent multiple rapid navigation events
+    if (isNavigating) {
+      return;
+    }
+
+    // Prevent default behavior and stop propagation for our handled keys
+    switch (event.key) {
+      case 'Escape':
+        event.preventDefault();
+        event.stopPropagation();
+        isNavigating = true;
+        // Go back to gallery (same as clicking "Back to gallery")
+        window.location.href = backUrl;
+        break;
+      
+      case 'ArrowLeft':
+        // Navigate to previous photo
+        const prevLink = document.querySelector('.desktop-nav-btn.prev, .mobile-nav-btn.prev') as HTMLAnchorElement;
+        if (prevLink) {
+          event.preventDefault();
+          event.stopPropagation();
+          isNavigating = true;
+          window.location.href = prevLink.href;
+        }
+        break;
+      
+      case 'ArrowRight':
+        // Navigate to next photo
+        const nextLink = document.querySelector('.desktop-nav-btn.next, .mobile-nav-btn.next') as HTMLAnchorElement;
+        if (nextLink) {
+          event.preventDefault();
+          event.stopPropagation();
+          isNavigating = true;
+          window.location.href = nextLink.href;
+        }
+        break;
+    }
+  });
 </script>
