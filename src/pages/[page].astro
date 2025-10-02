@@ -21,9 +21,10 @@ export async function getStaticPaths() {
   const photosPerPage = 9;
   const totalPages = Math.ceil(photos.length / photosPerPage);
   
-  return Array.from({ length: totalPages }, (_, i) => {
-    const page = i + 1;
-    const startIndex = i * photosPerPage;
+  // Skip page 1 since it's handled by index.astro
+  return Array.from({ length: totalPages - 1 }, (_, i) => {
+    const page = i + 2; // Start from page 2
+    const startIndex = (page - 1) * photosPerPage;
     const endIndex = startIndex + photosPerPage;
     const pagePhotos = photos.slice(startIndex, endIndex);
     
@@ -86,7 +87,7 @@ const pageTitle = getPageTitle(currentPage);
       <div class="nav">
         <a 
           class={`arrow ${currentPage <= 1 ? "disabled" : ""}`} 
-          href={`/${currentPage - 1}/`} 
+          href={currentPage === 2 ? "/" : `/${currentPage - 1}/`} 
           aria-label="Previous"
         >
           <img src="/arrow-left.svg" alt="Previous" class="arrow-icon" />
@@ -150,7 +151,7 @@ const pageTitle = getPageTitle(currentPage);
           event.preventDefault();
           event.stopPropagation();
           isNavigating = true;
-          window.location.href = `/${currentPage - 1}/`;
+          window.location.href = currentPage === 2 ? "/" : `/${currentPage - 1}/`;
         }
         break;
       

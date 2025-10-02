@@ -1,28 +1,125 @@
 ---
-// Root redirect page - blank but using Astro layout
+// Homepage - serves page 1 content directly at root URL
 import BaseLayout from '../layouts/BaseLayout.astro';
+import type { PhotoItem } from '../types/photoblog';
+import he from 'he';
+
+// Import the photoblog data generated at build time
+const photoblogData = await import('../data/photoblog.json');
+const photos = photoblogData.default as PhotoItem[];
+
+const photosPerPage = 9;
+const totalPages = Math.ceil(photos.length / photosPerPage);
+const currentPage = 1;
+
+// Get photos for page 1
+const pagePhotos = photos.slice(0, photosPerPage);
+
+const pageTitle = "Estás en lo del Nico. - Bienvenido a mi nube.";
 ---
 
 <BaseLayout 
-  title=""
-  description="Redirecting to gallery"
-  showHero={false}
+  title={pageTitle}
+  description="Personal photography gallery by Nicolas from Buenos Aires, Argentina."
 >
-  <!-- Immediate redirect via meta refresh (0 seconds) -->
-  <meta http-equiv="refresh" content="0; url=/1/">
-  
-  <!-- JavaScript fallback for immediate redirect -->
-  <script>
-    window.location.replace('/1/');
-  </script>
-  
-  <!-- Completely blank content - no flicker -->
-  <style>
-    body { 
-      background: white !important;
-    }
-    .main-content {
-      display: none !important;
-    }
-  </style>
+  <div class="gallery-container">
+    <!-- Photo Grid - Only Images (3x3 layout with 4:3 aspect ratio) -->
+    <div class="photo-grid">
+      {pagePhotos.map((photo: PhotoItem) => (
+        <a 
+          href={`/photo/${photo.id}/?from=${currentPage}`} 
+          class="photo-link"
+          aria-label={he.decode(photo.title)}
+        >
+          <img 
+            src={photo.image} 
+            alt={he.decode(photo.title)}
+            loading="lazy"
+            class="photo-img"
+            width="400"
+            height="400"
+          />
+        </a>
+      ))}
+    </div>
+    
+    <!-- Swiss-style minimal pagination -->
+    <nav class="gallery-pager" aria-label="Gallery pagination">
+      <span class="count">{String(currentPage).padStart(2,"0")} / {String(totalPages).padStart(2,"0")}</span>
+      <div class="nav">
+        <a 
+          class="arrow disabled" 
+          href="#" 
+          aria-label="Previous"
+        >
+          <img src="/arrow-left.svg" alt="Previous" class="arrow-icon" />
+        </a>
+        <a 
+          class={`arrow ${currentPage >= totalPages ? "disabled" : ""}`} 
+          href="/2/" 
+          aria-label="Next"
+        >
+          <img src="/arrow-right.svg" alt="Next" class="arrow-icon" />
+        </a>
+      </div>
+    </nav>
+
+    <!-- Gallery footer - Swiss minimal style -->
+    <footer class="gallery-footer">
+      <div class="footer-row">
+        <div class="footer-about">
+          Diseñador de Imagen y Sonido.<br/>
+          Entusiasta de la música, la <a href="https://www.blurfm.com" target="_blank" rel="noopener">radio</a> y el cine.<br/>
+          Amante del cielo, las estrellas y la Wikipedia.
+        </div>
+        <div class="footer-logos">
+          <a href="https://www.blurfm.com" target="_blank" rel="noopener">
+            <img src="/logo_blurfm.svg" alt="blur fm" />
+          </a>
+          <a href="https://www.nico.ar" target="_blank" rel="noopener">
+            <img src="/logo_nico.svg" alt="nico.ar" class="logo-nico" />
+          </a>
+        </div>
+      </div>
+      <hr class="footer-rule" />
+      <div class="container footer-powered">Powered by <a href="https://www.argensonix.com" target="_blank" rel="noopener">Argensonix Multimedia</a></div>
+    </footer>
+  </div>
 </BaseLayout>
+
+<!-- Client-side script for gallery keyboard navigation -->
+<script define:vars={{ currentPage, totalPages }}>
+  // Handle keyboard navigation for gallery pages
+  let isNavigating = false;
+  
+  document.addEventListener('keydown', (event) => {
+    // Ignore if user is typing in an input field
+    if (event.target instanceof HTMLInputElement || 
+        event.target instanceof HTMLTextAreaElement ||
+        event.target instanceof HTMLSelectElement) {
+      return;
+    }
+
+    // Prevent multiple rapid navigation events
+    if (isNavigating) {
+      return;
+    }
+
+    // Prevent default behavior and stop propagation for our handled keys
+    switch (event.key) {
+      case 'ArrowLeft':
+        // Can't go back from page 1
+        break;
+      
+      case 'ArrowRight':
+        // Navigate to next gallery page
+        if (currentPage < totalPages) {
+          event.preventDefault();
+          event.stopPropagation();
+          isNavigating = true;
+          window.location.href = "/2/";
+        }
+        break;
+    }
+  });
+</script>

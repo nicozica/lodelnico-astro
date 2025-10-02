@@ -10,9 +10,9 @@ ErrorDocument 404 /404.html
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
-# Redirect root to first gallery page (invisible to user)
-RewriteCond %{REQUEST_URI} ^/$
-RewriteRule ^$ /1/ [R=301,L]
+# Redirect /1/ to root (so old links work) - 301 permanent redirect
+RewriteCond %{REQUEST_URI} ^/1/$
+RewriteRule ^1/$ / [R=301,L]
 
 # If the file or directory exists, serve it as-is
 RewriteCond %{REQUEST_FILENAME} -f [OR]

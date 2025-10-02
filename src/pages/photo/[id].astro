@@ -144,7 +144,7 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
     <!-- Desktop Back Link (below image on desktop) -->
     <div class="desktop-back">
       <a 
-        href={`/${calculatedFromPage}/`} 
+        href={calculatedFromPage === 1 ? "/" : `/${calculatedFromPage}/`} 
         id="desktop-back-link"
       >
         ← Back to gallery
@@ -251,9 +251,12 @@ const hasText = Boolean(photo.contentHtmlNoImg && photo.contentHtmlNoImg.trim().
   const urlParams = new URLSearchParams(window.location.search);
   const fromPage = urlParams.get('from');
   
-  let backUrl = `/${fromPage && /^\d+$/.test(fromPage) ? fromPage : '1'}/`;
+  let backUrl = '/'; // Default to root for page 1
   
   if (fromPage && /^\d+$/.test(fromPage)) {
+    const pageNum = parseInt(fromPage);
+    backUrl = pageNum === 1 ? '/' : `/${pageNum}/`;
+    
     const desktopBackLink = document.getElementById('desktop-back-link');
     const mobileBackLink = document.getElementById('mobile-back-link');
     
