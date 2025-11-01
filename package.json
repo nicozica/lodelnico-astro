@@ -15,10 +15,10 @@
     "fetch-data": "node scripts/fetch-photoblog.mjs"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@astrojs/sitemap": "^3.5.0",
+    "@astrojs/check": "^0.9.5",
+    "@astrojs/sitemap": "^3.6.0",
     "@types/he": "^1.2.3",
-    "astro": "^5.13.2",
+    "astro": "^5.15.3",
     "he": "^1.2.0",
     "sharp": "^0.33.5",
     "typescript": "^5.6.3"
