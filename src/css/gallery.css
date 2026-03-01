@@ -231,10 +231,16 @@
   height: 72px; /* Larger logos in desktop */
   width: auto;
   display: block;
+  filter: grayscale(1);
+  opacity: 0.5;
 }
 
 .footer-logos img.logo-nico {
   height: 86px; /* Specific height for nico.ar logo for optical compensation */
+}
+
+.footer-logos img.logo-nico-log {
+  height: 56px;
 }
 
 .footer-rule {
@@ -259,15 +265,19 @@
   
   .footer-logos {
     justify-content: center;
-    gap: 32px;
+    gap: 28px;
   }
-  
+
   .footer-logos img {
-    height: 44px; /* Smaller logos in mobile */
+    height: 48px; /* Slightly larger logos in mobile */
   }
   
   .footer-logos img.logo-nico {
-    height: 52px; /* Proportionally larger nico.ar logo in mobile (44px + ~18% = 52px) */
+    height: 56px; /* Proportionally larger nico.ar logo in mobile */
+  }
+
+  .footer-logos img.logo-nico-log {
+    height: 38px;
   }
   
   .footer-about {

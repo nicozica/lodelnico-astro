@@ -380,12 +380,17 @@ async function main() {
   try {
     console.log('🔄 Fetching photoblog data from WordPress posts...');
     
-    const posts = await fetchAllPostsWithImages();
-    
-    // Ensure output directory exists
     const outputDir = join(__dirname, '..', 'src', 'data');
     const outputPath = join(outputDir, 'photoblog.json');
+    const posts = await fetchAllPostsWithImages();
+
+    if (posts.length === 0) {
+      throw new Error(
+        `Refusing to overwrite ${outputPath} with an empty dataset. Check WordPress connectivity at ${CONFIG.baseUrl}.`
+      );
+    }
     
+    // Ensure output directory exists
     mkdirSync(outputDir, { recursive: true });
     
     // Write JSON file
