@@ -1,51 +1,17 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" width="512" height="512" version="1.1" viewBox="0 0 512 512">
+  <!-- Generator: Adobe Illustrator 29.7.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 8)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #21346a;
+      }
 
-<svg
-   width="39.6875mm"
-   height="39.6875mm"
-   viewBox="0 0 39.6875 39.6875"
-   version="1.1"
-   id="svg1"
-   xml:space="preserve"
-   sodipodi:docname="favicon.svg"
-   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:document-units="mm"
-     inkscape:zoom="2.6666667"
-     inkscape:cx="50.999999"
-     inkscape:cy="127.875"
-     inkscape:window-width="1920"
-     inkscape:window-height="1011"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" /><defs
-     id="defs1" /><g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"><g
-       id="g1"
-       transform="translate(-32.543751,-24.606251)"><rect
-         style="fill:#0b1112;fill-opacity:1;stroke-width:1.065"
-         id="rect1"
-         width="39.6875"
-         height="39.6875"
-         x="32.543751"
-         y="24.606251"
-         ry="6.1256251" /><path
-         d="m 55.963542,41.366718 c 0,-3.797306 -2.628903,-5.777097 -6.004286,-5.777097 -3.278015,0 -4.576239,1.947336 -5.192896,2.985915 h -0.06491 v -2.531537 h -4.349051 v 17.26638 h 4.543784 v -9.898958 c 0,-2.628904 1.557868,-3.992039 3.570116,-3.992039 2.888548,0 2.953459,2.142069 2.953459,3.407838 v 10.483159 h 4.543784 z m 8.459059,7.205143 h -4.86834 v 4.738518 h 4.86834 z m 0,-11.87875 h -4.86834 v 4.738518 h 4.86834 z"
-         id="text2-9"
-         style="font-weight:bold;font-size:32.4556px;font-family:'Helvetica LT Std';-inkscape-font-specification:'Helvetica LT Std, Bold';letter-spacing:-0.404813px;word-spacing:-0.449792px;fill:#8fd4a8;stroke-width:1.065"
-         aria-label="n:" /></g></g></svg>
+      .st1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <rect class="st0" x="-30.2" y="-28.7" width="583.6" height="565.4"/>
+  <path class="st1" d="M367.1,252.6v-31.6l-.4-50.2-.2-22.9-.2-14.4c0-6.8,2.3-10.2,7-10.2s4.7.8,5.8,2.4c1.1,1.6,1.6,4.6,1.6,9v2.6c-.1,2.6-.2,7-.2,13.1l-.8,63.8-.6,58.5.5,61.5.6,61.7c-26-16.3-64-38.8-114.1-67.5-50.1-28.7-90.6-51.3-121.6-67.7l.2,9.3,1.9,97.7.2,13.1c0,5.4-2.5,8.1-7.6,8.1s-7.8-3.3-7.8-10l.2-13.2.2-21.4.8-97-1.5-130.7c51.1,31.7,129.8,77.1,235.9,136.3Z"/>
+</svg>
